@@ -1,0 +1,11 @@
+---
+- id: gitlabci-lint
+  name: Linting .gitlab-ci.yml
+  description: >
+    This hooks verifies that your Gitlab CI configuration is valid. You can
+    pass in a self-hosted GitLab URL in your .pre-commit-config.yaml, see
+    README.md.
+  entry: gitlabci-lint
+  language: python
+  files: '.gitlab-ci.yml'
+  pass_filenames: false
