@@ -1,5 +1,6 @@
-import sys
 import json
+import os
+import sys
 
 try:
     from urllib.request import Request, urlopen
@@ -15,17 +16,28 @@ def main(base_url="https://gitlab.com/"):
         base_url = sys.argv[1]
     rv = 0
     try:
-        url = urljoin(base_url, "/api/v4/ci/lint")
-        print("Using linter: " + url)
         with open(".gitlab-ci.yml", "r") as f:
             data = json.dumps({"content": f.read()})
+    except (FileNotFoundError, PermissionError):
+        print("Cannot open .gitlab-ci.yml")
+        rv = 1
+    else:
+        url = urljoin(base_url, "/api/v4/ci/lint")
+        msg_using_linter = "Using linter: " + url
+        headers = {
+            "Content-Type": "application/json",
+            "Content-Length": len(data),
+        }
+        token = os.getenv("GITLAB_TOKEN")
+        if token:
+            headers["PRIVATE-TOKEN"] = token
+            msg_using_linter += " with token " + len(token) * "*"
+        print(msg_using_linter)
+        try:
             request = Request(
                 url,
                 data.encode("utf-8"),
-                headers={
-                    "Content-Type": "application/json",
-                    "Content-Length": len(data),
-                },
+                headers=headers,
             )
             response = urlopen(request)
             lint_output = json.loads(response.read())
@@ -36,12 +48,9 @@ def main(base_url="https://gitlab.com/"):
                     print(error)
                 rv = 1
                 print("=======")
-    except (FileNotFoundError, PermissionError):
-        print("Cannot open .gitlab-ci.yml")
-        rv = 1
-    except URLError as exc:
-        print("Error connecting to Gitlab: " + str(exc))
-        rv = 1
+        except URLError as exc:
+            print("Error connecting to Gitlab: " + str(exc))
+            rv = 1
     return rv
 
 
