@@ -1,19 +1,22 @@
+import argparse
 import json
 import os
-import sys
 
-try:
-    from urllib.request import Request, urlopen
-    from urllib.error import URLError
-    from urllib.parse import urljoin
-except ImportError:
-    from urllib2 import Request, urlopen, URLError
-    from urlparse import urljoin
+from urllib.error import URLError
+from urllib.parse import urljoin
+from urllib.request import Request, urlopen
 
 
-def main(base_url="https://gitlab.com/"):
-    if len(sys.argv) > 1:
-        base_url = sys.argv[1]
+parser = argparse.ArgumentParser()
+parser.add_argument("base_url", nargs="?", default="https://gitlab.com/")
+parser.add_argument("--token", default=os.getenv("GITLAB_TOKEN"))
+
+
+def main(argv=None):
+    args = parser.parse_args(argv)
+    base_url = args.base_url
+    token = args.token
+
     rv = 0
     try:
         with open(".gitlab-ci.yml", "r") as f:
@@ -28,7 +31,6 @@ def main(base_url="https://gitlab.com/"):
             "Content-Type": "application/json",
             "Content-Length": len(data),
         }
-        token = os.getenv("GITLAB_TOKEN")
         if token:
             headers["PRIVATE-TOKEN"] = token
             msg_using_linter += " with token " + len(token) * "*"
