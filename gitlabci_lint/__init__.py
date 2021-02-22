@@ -2,14 +2,25 @@ import argparse
 import json
 import os
 
-from urllib.error import URLError
+import urllib.error
 from urllib.parse import urljoin
 from urllib.request import Request, urlopen
 
 
+token_env_key = "GITLAB_TOKEN"
+
 parser = argparse.ArgumentParser()
 parser.add_argument("base_url", nargs="?", default="https://gitlab.com/")
-parser.add_argument("--token", default=os.getenv("GITLAB_TOKEN"))
+parser.add_argument(
+    "--token",
+    default=os.getenv(token_env_key),
+    help=(
+        "GitLab personal access token. "
+        "As default the value of {} environmental variable is used.".format(
+            token_env_key
+        )
+    ),
+)
 
 
 def main(argv=None):
@@ -50,8 +61,17 @@ def main(argv=None):
                     print(error)
                 rv = 1
                 print("=======")
-        except URLError as exc:
+        except urllib.error.URLError as exc:
             print("Error connecting to Gitlab: " + str(exc))
+            if (
+                not token
+                and isinstance(exc, urllib.error.HTTPError)
+                and exc.code == 401
+            ):
+                print(
+                    "The lint endpoint requires authentication."
+                    "Please set {} environment variable".format(token_env_key)
+                )
             rv = 1
     return rv
 
