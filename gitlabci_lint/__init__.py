@@ -1,31 +1,56 @@
-import sys
+import argparse
 import json
+import os
 
-try:
-    from urllib.request import Request, urlopen
-    from urllib.error import URLError
-    from urllib.parse import urljoin
-except ImportError:
-    from urllib2 import Request, urlopen, URLError
-    from urlparse import urljoin
+import urllib.error
+from urllib.parse import urljoin
+from urllib.request import Request, urlopen
 
 
-def main(base_url="https://gitlab.com/"):
-    if len(sys.argv) > 1:
-        base_url = sys.argv[1]
+token_env_key = "GITLAB_TOKEN"
+
+parser = argparse.ArgumentParser()
+parser.add_argument("base_url", nargs="?", default="https://gitlab.com/")
+parser.add_argument(
+    "--token",
+    default=os.getenv(token_env_key),
+    help=(
+        "GitLab personal access token. "
+        "As default the value of {} environmental variable is used.".format(
+            token_env_key
+        )
+    ),
+)
+
+
+def main(argv=None):
+    args = parser.parse_args(argv)
+    base_url = args.base_url
+    token = args.token
+
     rv = 0
     try:
-        url = urljoin(base_url, "/api/v4/ci/lint")
-        print("Using linter: " + url)
         with open(".gitlab-ci.yml", "r") as f:
             data = json.dumps({"content": f.read()})
+    except (FileNotFoundError, PermissionError):
+        print("Cannot open .gitlab-ci.yml")
+        rv = 1
+    else:
+        url = urljoin(base_url, "/api/v4/ci/lint")
+        msg_using_linter = "Using linter: " + url
+        headers = {
+            "Content-Type": "application/json",
+            "Content-Length": len(data),
+        }
+        if token:
+            headers["PRIVATE-TOKEN"] = token
+            msg_using_linter += " with token " + len(token) * "*"
+        print(msg_using_linter)
+        try:
             request = Request(
                 url,
                 data.encode("utf-8"),
-                headers={
-                    "Content-Type": "application/json",
-                    "Content-Length": len(data),
-                },
+                headers=headers,
             )
             response = urlopen(request)
             lint_output = json.loads(response.read())
@@ -36,12 +61,18 @@ def main(base_url="https://gitlab.com/"):
                     print(error)
                 rv = 1
                 print("=======")
-    except (FileNotFoundError, PermissionError):
-        print("Cannot open .gitlab-ci.yml")
-        rv = 1
-    except URLError as exc:
-        print("Error connecting to Gitlab: " + str(exc))
-        rv = 1
+        except urllib.error.URLError as exc:
+            print("Error connecting to Gitlab: " + str(exc))
+            if (
+                not token
+                and isinstance(exc, urllib.error.HTTPError)
+                and exc.code == 401
+            ):
+                print(
+                    "The lint endpoint requires authentication."
+                    "Please set {} environment variable".format(token_env_key)
+                )
+            rv = 1
     return rv
 
 
