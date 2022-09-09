@@ -5,6 +5,8 @@ This is a [pre-commit hook](https://pre-commit.com/) that uses GitLab's `/api/v4
 
 By default, this tool sends your configuration to https://gitlab.com, though this can be overridden (see below).
 
+This tool has been extended and adapted from [kadrach's](https://github.com/kadrach/pre-commit-gitlabci-lint) implementation (cf. the [license](LICENSE.txt)).
+
 ## Usage
 
 GitLab Lint API now [requires authorization](https://gitlab.com/gitlab-org/gitlab/-/issues/321290).
