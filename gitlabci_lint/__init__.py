@@ -69,8 +69,8 @@ def validateCiConfig(baseUrl: str, configFile: str) -> int:
                 headers=headers,
             )
 
-            response = urlopen(request)
-            lint_output = json.loads(response.read())
+            with urlopen(request) as response:
+                lint_output = json.loads(response.read())
 
             if lint_output['status'] == 'invalid':
                 errprint('=======')
