@@ -26,6 +26,10 @@ repos:
       # args: ["https://custom.gitlab.host.com"]
 ```
 
+## Development
+
+Install dependencies by running `./scripts/dependencies.sh`.
+
 ## TODOs:
 
 - Allow passing multiple config files for validation in template repositories.

@@ -19,7 +19,7 @@ from functools import partial
 
 if not (token := os.getenv('GITLAB_TOKEN')):
     print('\'GITLAB_TOKEN\' not set. Exiting.')
-    exit(1)
+    sys.exit(1)
 
 
 DEBUG = bool(os.getenv('GITLAB_DEBUG'))
@@ -28,7 +28,7 @@ DEBUG = bool(os.getenv('GITLAB_DEBUG'))
 errprint = partial(print, file=sys.stderr)
 
 
-def validateCIConfig(baseUrl: str, configFile: str) -> int:
+def validateCiConfig(baseUrl: str, configFile: str) -> int:
     """
     Validate the input GitLab CI config against the validation API endpoint.
 
@@ -116,4 +116,4 @@ if __name__ == 'gitlabci_lint' or __name__ == '__main__':
     base_url = args.base_url
     config_file = args.config
 
-    exit(validateCIConfig(base_url, config_file))
+    sys.exit(validateCiConfig(base_url, config_file))
