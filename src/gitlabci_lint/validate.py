@@ -18,7 +18,7 @@ from http import HTTPStatus
 from functools import partial
 
 
-__version__ = '0.0.1'
+__version__ = '0.0.2'
 
 
 if not (token := os.getenv('GITLAB_TOKEN')):
@@ -122,7 +122,7 @@ if __name__ in ('gitlabci_lint.validate', '__main__'):
     config_file = args.config
 
     if (exitCode := validateCiConfig(base_url, config_file) == os.EX_OK):
-        # Optionally could
+        # Optionally could print message.
         pass
 
     sys.exit(validateCiConfig(base_url, config_file))
