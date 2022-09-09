@@ -1,0 +1,11 @@
+stages: []
+
+# test
+
+hello-world:
+  image: ${TEST_IMAGE}
+  stage: test
+  script:
+    - printf "Hello, world!\\n"
+  tags:
+    - docker
