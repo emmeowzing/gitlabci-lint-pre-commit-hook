@@ -148,6 +148,8 @@ jobs:
           name: Install development package
           command: |
             python setup.py develop
+            export PATH="$PATH":/home/circleci/.pyenv/versions/"$(python --version | awk '{ print $2 }')"/bin/
+            gitlabci-lint --version
       - run:
           name: Run bats tests
           command: |
@@ -176,6 +178,7 @@ workflows:
                 - master
 
       - bats-tests:
+          context: gitlab
           filters:
             branches:
               ignore:

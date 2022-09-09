@@ -18,6 +18,9 @@ from http import HTTPStatus
 from functools import partial
 
 
+__version__ = '0.0.1'
+
+
 if not (token := os.getenv('GITLAB_TOKEN')):
     print('\'GITLAB_TOKEN\' not set. Exiting.')
     sys.exit(1)
@@ -109,6 +112,11 @@ if __name__ in ('gitlabci_lint.validate', '__main__'):
     parser.add_argument(
         '-c', '--config', nargs='?', default='.gitlab-ci.yml',
         help='CI Config file to check.'
+    )
+
+    parser.add_argument(
+        '--version', action='version',
+        version=f'%(prog)s {__version__}'
     )
 
     args = parser.parse_args()
