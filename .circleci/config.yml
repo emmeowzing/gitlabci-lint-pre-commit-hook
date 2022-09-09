@@ -148,7 +148,8 @@ jobs:
           name: Install development package
           command: |
             python setup.py develop
-            export PATH="$PATH":/home/circleci/.pyenv/versions/"$(python --version | awk '{ print $2 }')"/bin/
+            echo "PATH=\"$PATH\":/home/circleci/.pyenv/versions/\"$(python --version | awk '{ print $2 }')\"/bin/" >> ~/.bashrc
+            source ~/.bashrc
             gitlabci-lint --version
       - run:
           name: Run bats tests

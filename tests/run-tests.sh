@@ -2,6 +2,9 @@
 # Test all test cases in this directory. Files should end in PASS or FAIL to indicate the expected outcome.
 
 
+set -e
+
+
 ##
 # Generate all test bats files/cases to execute upon.
 generate_tests()
