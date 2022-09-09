@@ -151,7 +151,7 @@ jobs:
       - run:
           name: Run bats tests
           command: |
-            sudo apt install -y bats
+            sudo apt update && sudo apt install -y bats
             << parameters.executable >>
 
 
