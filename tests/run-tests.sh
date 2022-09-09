@@ -56,7 +56,7 @@ main()
 
     bats ./tests/.*.bats
 
-    #cleanup_tests
+    cleanup_tests
 }
 
 

@@ -21,7 +21,7 @@ An example `.pre-commit-config.yaml`:
 ```yaml
 ---
 repos:
-  - repo: https://github.com/kadrach/pre-commit-gitlabci-lint
+  - repo: https://github.com/bjd2385/pre-commit-gitlabci-lint
     rev: <latest release>
     hooks:
       - id: gitlabci-lint
