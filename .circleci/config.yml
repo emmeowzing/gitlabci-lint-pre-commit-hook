@@ -165,6 +165,10 @@ workflows:
       - shellcheck/check:
           dir: .
           exclude: SC2148
+          filters:
+            branches:
+              ignore:
+                - master
 
       - pylint:
           filters:
