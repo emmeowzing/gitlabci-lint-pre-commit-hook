@@ -5,10 +5,17 @@ executors:
     docker:
       - image: cimg/base:stable
 
-  python3:
+  python3-10:
     docker:
-      - image: cimg/python:3.10.2
+      - image: cimg/python:3.10.6
 
+  python3-9:
+    docker:
+      - image: cimg/python:3.9.12
+
+  python3-8:
+    docker:
+      - image: cimg/python:3.8.13
 
 orbs:
   shellcheck: circleci/shellcheck@3.1.1
@@ -56,6 +63,7 @@ commands:
           command: |
             pip install mypy
             mypy --config-file << parameters.configuration_file >> << parameters.modules_path >>
+
   pypi:
     description: Publish a package to PyPI.
     steps:
@@ -93,7 +101,7 @@ jobs:
 
   # TODO: Make it so I don't have to check out the code and install deps every time to reduce cost. Cache venv.
   pylint:
-    executor: python3
+    executor: python3-10
     resource_class: small
     parameters:
       modules_path:
@@ -110,7 +118,7 @@ jobs:
           modules_path: << parameters.modules_path >>
           configuration_file: << parameters.configuration_file >>
   mypy:
-    executor: python3
+    executor: python3-10
     resource_class: small
     parameters:
       modules_path:
@@ -128,14 +136,14 @@ jobs:
           configuration_file: << parameters.configuration_file >>
 
   publish-pypi:
-    executor: python3
+    executor: python3-10
     resource_class: small
     steps:
       - checkout
       - pypi
 
   bats-tests:
-    executor: python3
+    executor: python3-10
     resource_class: small
     parameters:
       executable:
