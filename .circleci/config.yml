@@ -149,7 +149,7 @@ jobs:
           command: |
             python setup.py develop
             echo "PATH=$PATH:/home/circleci/.pyenv/versions/$(python --version | awk '{ print $2 }')/bin/" >> ~/.bashrc
-            source ~/.bashrc
+            export PATH="$PATH:/home/circleci/.pyenv/versions/$(python --version | awk '{ print $2 }')/bin/"
             gitlabci-lint --version
       - run:
           name: Run bats tests
