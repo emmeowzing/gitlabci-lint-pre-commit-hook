@@ -15,7 +15,7 @@ parser.add_argument(
     "--token",
     default=os.getenv(token_env_key),
     help=(
-        "GitLab personal access token. "
+        "GitLab personal access token."
         "As default the value of {} environmental variable is used.".format(
             token_env_key
         )

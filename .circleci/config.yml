@@ -1,0 +1,147 @@
+version: 2.1
+
+executors:
+  default:
+    docker:
+      - image: cimg/base:stable
+
+  python3:
+    docker:
+      - image: cimg/python:3.10.2
+
+
+orbs:
+  shellcheck: circleci/shellcheck@3.1.1
+
+
+commands:
+  pylint:
+    description: Run pylint
+    parameters:
+      modules_path:
+        type: string
+        description: Path to modules directory in package.
+        default: src
+      configuration_file:
+        type: string
+        description: Path to pylint configuration file
+        default: .pylintrc
+    steps:
+      - run:
+          name: Install dependencies
+          command: pip install -r requirements.txt
+      - run:
+          name: Pylint
+          command: pylint --rcfile=<< parameters.configuration_file >> << parameters.modules_path >>
+
+  mypy:
+    description: Run mypy
+    parameters:
+      modules_path:
+        type: string
+        description: Path to modules directory in package.
+        default: src
+      configuration_file:
+        type: string
+        description: Path to mypy configuration file
+        default: .mypy.ini
+    steps:
+      - run:
+          name: Install dependencies
+          command: pip install -r requirements.txt
+      - run:
+          name: MyPy
+          command: mypy --config-file << parameters.configuration_file >> << parameters.modules_path >>
+  pypi:
+    description: Publish a package to PyPI.
+    steps:
+      - run:
+          name: Build package.
+          command: python setup.py sdist bdist_wheel
+      - run:
+          name: Publish package to PyPI.
+          command: |
+            pip install twine
+            twine upload dist/* -u $PYPI_USERNAME -p $API_TOKEN
+
+
+jobs:
+  generate-release:
+    executor: default
+    resource_class: small
+    steps:
+      - checkout
+      - run:
+          name: Install gh CLI
+          command: |+
+            wget https://github.com/cli/cli/releases/download/v2.9.0/gh_2.9.0_linux_amd64.deb -O gh.deb
+            sudo dpkg -i gh.deb
+      - run:
+          name: Generate release
+          command: |+
+            # Get latest tag.
+            git fetch --all --tags
+            export LATEST_TAG="$(git tag | sort -V | tail -1)"
+            echo "$LATEST_TAG"
+            # Generate release from tag.
+            echo "$GITHUB_TOKEN" | gh auth login --with-token 2>/dev/null || true
+            gh release create "$LATEST_TAG" --generate-notes
+
+  # TODO: Make it so I don't have to check out the code and install deps every time to reduce cost. Cache venv.
+  pylint:
+    executor: python3
+    resource_class: small
+    steps:
+      - checkout
+      - pylint
+  mypy:
+    executor: python3
+    resource_class: small
+    steps:
+      - checkout
+      - mypy
+  publish-pypi:
+    executor: python3
+    resource_class: small
+    steps:
+      - checkout
+      - pypi
+
+
+workflows:
+  version: 2
+
+  on-commit:
+    jobs:
+      - shellcheck/check:
+          dir: .
+          exclude: SC2148
+
+      - pylint:
+          filters:
+            branches:
+              ignore:
+                - master
+      - mypy:
+          filters:
+            branches:
+              ignore:
+                - master
+
+  on-tag:
+    jobs:
+      - generate-release:
+          name: Generate release from tag
+          context: github
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^v[0-9]+\.[0-9]+\.[0-9]+$/
+
+      - publish-pypi:
+          context: pypi
+          filters:
+            branches:
+              only:
+                - master
