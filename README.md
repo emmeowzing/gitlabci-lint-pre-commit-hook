@@ -25,3 +25,7 @@ repos:
       - id: gitlabci-lint
       # args: ["https://custom.gitlab.host.com"]
 ```
+
+## TODOs:
+
+- Allow passing multiple config files for validation in template repositories.
