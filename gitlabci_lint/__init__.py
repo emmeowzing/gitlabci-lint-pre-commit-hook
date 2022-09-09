@@ -39,7 +39,7 @@ def validateCiConfig(baseUrl: str, configFile: str) -> int:
     returnValue = 0
 
     try:
-        with open(configFile, 'r') as f:
+        with open(configFile, 'r', encoding='utf-8') as f:
             data = json.dumps(
                 {
                     'content': f.read()
