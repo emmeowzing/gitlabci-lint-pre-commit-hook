@@ -165,13 +165,11 @@ workflows:
           exclude: SC2148
 
       - pylint:
-          modules_path: gitlabci_lint
           filters:
             branches:
               ignore:
                 - master
       - mypy:
-          modules_path: gitlabci_lint
           filters:
             branches:
               ignore:
