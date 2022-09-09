@@ -95,15 +95,37 @@ jobs:
   pylint:
     executor: python3
     resource_class: small
+    parameters:
+      modules_path:
+        type: string
+        description: Path to modules directory in package.
+        default: src
+      configuration_file:
+        type: string
+        description: Path to pylint configuration file
+        default: .pylintrc
     steps:
       - checkout
-      - pylint
+      - pylint:
+          modules_path: << parameters.modules_path >>
+          configuration_file: << parameters.configuration_file >>
   mypy:
     executor: python3
     resource_class: small
+    parameters:
+      modules_path:
+        type: string
+        description: Path to modules directory in package.
+        default: src
+      configuration_file:
+        type: string
+        description: Path to mypy configuration file
+        default: .mypy.ini
     steps:
       - checkout
-      - mypy
+      - mypy:
+          modules_path: << parameters.modules_path >>
+          configuration_file: << parameters.configuration_file >>
   publish-pypi:
     executor: python3
     resource_class: small
@@ -122,11 +144,13 @@ workflows:
           exclude: SC2148
 
       - pylint:
+          modules_path: gitlabci_lint
           filters:
             branches:
               ignore:
                 - master
       - mypy:
+          modules_path: gitlabci_lint
           filters:
             branches:
               ignore:
