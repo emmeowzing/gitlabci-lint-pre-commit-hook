@@ -32,7 +32,9 @@ commands:
           command: pip install -r requirements.txt
       - run:
           name: Pylint
-          command: pylint --rcfile=<< parameters.configuration_file >> << parameters.modules_path >>
+          command: |
+            pip install pylint
+            pylint --rcfile=<< parameters.configuration_file >> << parameters.modules_path >>
 
   mypy:
     description: Run mypy
@@ -51,7 +53,9 @@ commands:
           command: pip install -r requirements.txt
       - run:
           name: MyPy
-          command: mypy --config-file << parameters.configuration_file >> << parameters.modules_path >>
+          command: |
+            pip install mypy
+            mypy --config-file << parameters.configuration_file >> << parameters.modules_path >>
   pypi:
     description: Publish a package to PyPI.
     steps:

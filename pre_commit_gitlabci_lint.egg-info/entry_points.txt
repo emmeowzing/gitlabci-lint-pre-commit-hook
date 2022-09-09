@@ -1,2 +1,0 @@
-[console_scripts]
-gitlabci-lint = gitlabci_lint:main
