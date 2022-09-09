@@ -148,7 +148,7 @@ jobs:
           name: Install development package
           command: |
             python setup.py develop
-            echo "PATH=\"$PATH\":/home/circleci/.pyenv/versions/\"$(python --version | awk '{ print $2 }')\"/bin/" >> ~/.bashrc
+            echo "PATH=$PATH:/home/circleci/.pyenv/versions/$(python --version | awk '{ print $2 }')/bin/" >> ~/.bashrc
             source ~/.bashrc
             gitlabci-lint --version
       - run:
