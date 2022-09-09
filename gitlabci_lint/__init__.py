@@ -95,7 +95,7 @@ def validateCiConfig(baseUrl: str, configFile: str) -> int:
     return returnValue
 
 
-if __name__ == 'gitlabci_lint' or __name__ == '__main__':
+if __name__ in ('gitlabci_lint', '__main__'):
     parser = argparse.ArgumentParser(
         description=__doc__,
         formatter_class=argparse.ArgumentDefaultsHelpFormatter
