@@ -3,13 +3,10 @@ Validate your GitLab CI with GitLab's API endpoint.
 """
 
 
-from typing import Any
-
 import argparse
 import json
 import os
 import sys
-import pathlib
 
 from urllib.error import HTTPError
 from urllib.parse import urljoin
@@ -18,7 +15,7 @@ from http import HTTPStatus
 from functools import partial
 
 
-__version__ = '0.0.2'
+__version__ = '0.0.3'
 
 
 if not (token := os.getenv('GITLAB_TOKEN')):
