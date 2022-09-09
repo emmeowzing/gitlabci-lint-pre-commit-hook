@@ -3,13 +3,10 @@ Validate your GitLab CI with GitLab's API endpoint.
 """
 
 
-from typing import Any
-
 import argparse
 import json
 import os
 import sys
-import pathlib
 
 from urllib.error import HTTPError
 from urllib.parse import urljoin
