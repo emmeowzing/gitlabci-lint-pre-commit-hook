@@ -31,13 +31,13 @@ setup(
     author='Emma Doyle',
     author_email='bjd2385.linux@gmail.com',
     keywords='pre-commit, GitLab, CI, continuous integration',
-    package_dir={'': 'gitlabci_lint'},
-    packages=find_packages(where='gitlabci_lint'),
+    package_dir={'': 'src'},
+    packages=find_packages(where='src'),
     python_requires='>=3.10, <4',
     url = 'https://github.com/bjd2385/pre-commit-gitlabci-lint',
     install_requires=[],
     entry_points={
-        "console_scripts": ["gitlabci-lint = gitlabci_lint:validateCIConfig"]
+        "console_scripts": ["gitlabci-lint = gitlabci_lint.validate:validateCiConfig"]
     },
     project_urls={  # Optional
         'Bug Reports': 'https://github.com/bjd2385/pre-commit-gitlabci-lint/issues',

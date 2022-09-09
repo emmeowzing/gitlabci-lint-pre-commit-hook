@@ -8,6 +8,9 @@
     "install:dependencies": "./scripts/dependencies.sh",
     "pylint": "./scripts/pylint.sh",
     "develop": "./scripts/develop.sh",
-    "clean": "./scripts/clean.sh"
+    "clean": "./scripts/clean.sh",
+    "test": "./scripts/tests.sh",
+    "tests": "./scripts/tests.sh",
+    "run:tests": "./scripts/tests.sh"
   }
 }

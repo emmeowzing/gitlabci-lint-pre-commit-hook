@@ -9,6 +9,7 @@ import argparse
 import json
 import os
 import sys
+import pathlib
 
 from urllib.error import HTTPError
 from urllib.parse import urljoin
@@ -20,7 +21,6 @@ from functools import partial
 if not (token := os.getenv('GITLAB_TOKEN')):
     print('\'GITLAB_TOKEN\' not set. Exiting.')
     sys.exit(1)
-
 
 DEBUG = bool(os.getenv('GITLAB_DEBUG'))
 
@@ -46,7 +46,7 @@ def validateCiConfig(baseUrl: str, configFile: str) -> int:
                 }
             )
     except (FileNotFoundError, PermissionError):
-        errprint('Cannot open .gitlab-ci.yml')
+        errprint(f'Cannot open {configFile}')
         returnValue = 1
     else:
         url = urljoin(baseUrl, '/api/v4/ci/lint')
@@ -95,7 +95,7 @@ def validateCiConfig(baseUrl: str, configFile: str) -> int:
     return returnValue
 
 
-if __name__ in ('gitlabci_lint', '__main__'):
+if __name__ in ('gitlabci_lint.validate', '__main__'):
     parser = argparse.ArgumentParser(
         description=__doc__,
         formatter_class=argparse.ArgumentDefaultsHelpFormatter

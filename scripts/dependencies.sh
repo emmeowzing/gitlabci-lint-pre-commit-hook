@@ -9,5 +9,7 @@ if [ "$(conda info --envs --json | jq -r '.envs[]' | awk '/(gitlab-ci-lint)$/')"
     conda create -y -n gitlab-ci-lint python=3.10
 fi
 
+sudo apt install -y bats
+
 #conda activate gitlab-ci-lint
 #pip install setupext_janitor pylint mypy

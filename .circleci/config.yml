@@ -126,12 +126,27 @@ jobs:
       - mypy:
           modules_path: << parameters.modules_path >>
           configuration_file: << parameters.configuration_file >>
+
   publish-pypi:
     executor: python3
     resource_class: small
     steps:
       - checkout
       - pypi
+
+  bats-tests:
+    executor: default
+    resource_class: small
+    parameters:
+      executable:
+        type: string
+        description: Location of the executable to run tests.
+        default: ./scripts/tests.sh
+    steps:
+      - checkout
+      - run:
+          name: Run tests.
+          command: << parameters.executable >>
 
 
 workflows:
@@ -151,6 +166,12 @@ workflows:
                 - master
       - mypy:
           modules_path: gitlabci_lint
+          filters:
+            branches:
+              ignore:
+                - master
+
+      - bats-tests:
           filters:
             branches:
               ignore:
