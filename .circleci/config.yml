@@ -145,7 +145,11 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Run tests.
+          name: Install development package
+          command: |
+            python setup.py develop
+      - run:
+          name: Run bats tests
           command: |
             sudo apt install -y bats
             << parameters.executable >>
