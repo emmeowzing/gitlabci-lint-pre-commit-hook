@@ -18,14 +18,12 @@ from http import HTTPStatus
 from functools import partial
 
 
-__version__ = '0.0.1'
+__version__ = '0.0.2'
 
 
 if not (token := os.getenv('GITLAB_TOKEN')):
     print('\'GITLAB_TOKEN\' not set. Exiting.')
     sys.exit(1)
-
-DEBUG = bool(os.getenv('GITLAB_DEBUG'))
 
 
 errprint = partial(print, file=sys.stderr)
@@ -38,6 +36,9 @@ def validateCiConfig(baseUrl: str, configFile: str) -> int:
     Args:
         baseUrl: The location of the GitLab instance.
         configFile: The GitLab CI file to validate.
+
+    Returns:
+        An exit code, zero if successful and the CI config is valid.
     """
     returnValue = 0
 
@@ -53,7 +54,6 @@ def validateCiConfig(baseUrl: str, configFile: str) -> int:
         returnValue = 1
     else:
         url = urljoin(baseUrl, '/api/v4/ci/lint')
-        msg_using_linter = f'Using linter: {url}'
         headers = {
             'Content-Type': 'application/json',
             'Content-Length': str(len(data))
@@ -61,9 +61,6 @@ def validateCiConfig(baseUrl: str, configFile: str) -> int:
 
         if token:
             headers['PRIVATE-TOKEN'] = token
-            if DEBUG:
-                msg_using_linter += f' with token {token}'
-        print(msg_using_linter)
 
         try:
             request = Request(
@@ -123,5 +120,9 @@ if __name__ in ('gitlabci_lint.validate', '__main__'):
 
     base_url = args.base_url
     config_file = args.config
+
+    if (exitCode := validateCiConfig(base_url, config_file) == os.EX_OK):
+        # Optionally could print message.
+        pass
 
     sys.exit(validateCiConfig(base_url, config_file))
