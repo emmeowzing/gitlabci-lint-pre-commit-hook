@@ -146,7 +146,9 @@ jobs:
       - checkout
       - run:
           name: Run tests.
-          command: << parameters.executable >>
+          command: |
+            sudo apt install -y bats
+            << parameters.executable >>
 
 
 workflows:
