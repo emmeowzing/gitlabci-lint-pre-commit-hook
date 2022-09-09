@@ -122,4 +122,4 @@ if __name__ in ('gitlabci_lint.validate', '__main__'):
         # Optionally could print message.
         pass
 
-    sys.exit(validateCiConfig(base_url, config_file))
+    sys.exit(exitCode)
