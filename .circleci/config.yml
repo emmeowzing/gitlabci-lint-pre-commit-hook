@@ -135,7 +135,7 @@ jobs:
       - pypi
 
   bats-tests:
-    executor: default
+    executor: python3
     resource_class: small
     parameters:
       executable:
