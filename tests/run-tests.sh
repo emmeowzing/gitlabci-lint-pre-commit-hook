@@ -34,7 +34,7 @@ EOFI
 #! /usr/bin/env bats
 
 @test "$f_base" {
-    ! [ gitlabci-lint -c "$f" ]
+    ! gitlabci-lint -c "$f"
 }
 EOFI
         fi
