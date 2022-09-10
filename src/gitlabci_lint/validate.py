@@ -15,7 +15,7 @@ from http import HTTPStatus
 from functools import partial
 
 
-__version__ = '0.0.5'
+__version__ = '1.0.0'
 
 
 if not (token := os.getenv('GITLAB_TOKEN')):
