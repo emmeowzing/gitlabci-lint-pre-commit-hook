@@ -5,7 +5,7 @@ stages:
 
 hello-world:
   image: ${TEST_IMAGE}
-  stage: test
+  stage: test1
   script:
     - printf "Hello, world!\\n"
   tags:
