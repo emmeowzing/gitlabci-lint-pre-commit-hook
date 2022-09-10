@@ -31,7 +31,7 @@ repos:
 
 ## Development
 
-Install dependencies by running `./scripts/dependencies.sh`.
+Install dependencies by running `./scripts/dependencies.sh`. Or, if you already have `yarn` in your path, `yarn install:deps`.
 
 ### Releases
 

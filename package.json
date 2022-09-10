@@ -6,6 +6,7 @@
   "license": "MIT",
   "scripts": {
     "install:dependencies": "./scripts/dependencies.sh",
+    "install:deps": "yarn install:dependencies",
     "pylint": "./scripts/pylint.sh",
     "develop": "./scripts/develop.sh",
     "clean": "./scripts/clean.sh",

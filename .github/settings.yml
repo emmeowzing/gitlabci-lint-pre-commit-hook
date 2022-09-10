@@ -1,5 +1,5 @@
 repository:
-  name:  pre-commit-gitlabci-lint
+  name:  gitlabci-lint-pre-commit-hook
   description: A pre-commit hook that lints Gitlab CI configurations
   homepage: https://pypi.org/project/pre-commit-gitlabci-lint/
   topics: gitlab, git, pre-commit, lint

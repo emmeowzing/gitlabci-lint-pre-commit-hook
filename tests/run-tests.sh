@@ -13,7 +13,7 @@ generate_tests()
     mapfile -t tests < <(find ./tests/ -type f -name "*.yml")
 
     for f in "${tests[@]}"; do
-        echo "$f"
+        printf "%s\\n" "$f"
         f_base="$(basename "$f")"
         f_base_ext="${f_base%.*}"
         f_path="$(dirname "$f")"

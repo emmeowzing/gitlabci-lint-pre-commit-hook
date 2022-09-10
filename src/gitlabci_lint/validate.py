@@ -15,7 +15,7 @@ from http import HTTPStatus
 from functools import partial
 
 
-__version__ = '0.0.3'
+__version__ = '0.0.4'
 
 
 if not (token := os.getenv('GITLAB_TOKEN')):
@@ -80,10 +80,9 @@ def validateCiConfig(baseUrl: str, configFile: str) -> int:
             errprint(f'Error connecting to Gitlab: {exc}')
 
             if exc.code == HTTPStatus.UNAUTHORIZED:
-                print(
+                errprint(
                     'The lint endpoint requires authentication.'
-                    'Please check value of \'GITLAB_TOKEN\' environment variable',
-                    file=sys.stderr
+                    'Please check value of \'GITLAB_TOKEN\' environment variable'
                 )
             else:
                 errprint(f'Failed with reason \'{exc.reason}\'')
