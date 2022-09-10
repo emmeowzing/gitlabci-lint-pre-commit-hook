@@ -20,7 +20,7 @@ generate_tests()
         f_bats="${f_path}/${f_base_ext}.bats"
 
         if [ "$(echo "$f_base_ext" | awk '/(PASS)$/')" ]; then
-            # Forward logic
+            # PASS
             cat > "$f_bats" << EOFI
 #! /usr/bin/env bats
 
@@ -29,7 +29,7 @@ generate_tests()
 }
 EOFI
         else
-            # Backward logic
+            # FAIL
             cat > "$f_bats" << EOFI
 #! /usr/bin/env bats
 

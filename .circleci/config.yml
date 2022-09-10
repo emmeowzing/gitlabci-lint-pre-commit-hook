@@ -142,7 +142,7 @@ jobs:
       - checkout
       - pypi
 
-  bats-tests:
+  test-bats:
     executor: python3-10
     resource_class: small
     parameters:
@@ -189,7 +189,7 @@ workflows:
               ignore:
                 - master
 
-      - bats-tests:
+      - test-bats:
           context: gitlab
           filters:
             branches:
