@@ -26,7 +26,7 @@ if not (token := os.getenv('GITLAB_TOKEN')):
 errprint = partial(print, file=sys.stderr)
 
 
-def validateCiConfig(baseUrl: str, configFile: str, silent: bool = False) -> int:
+def validateCiConfig(baseUrl: str, configFile: str, silent: bool) -> int:
     """
     Validate the input GitLab CI config against the validation API endpoint.
 
