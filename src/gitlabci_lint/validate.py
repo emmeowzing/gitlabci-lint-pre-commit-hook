@@ -133,9 +133,9 @@ if __name__ in ('gitlabci_lint.validate', '__main__'):
 
     base_url = args.base_url
     config_file = args.config
-    silent = args.quiet
+    silence = args.quiet
 
-    if (exitCode := validateCiConfig(base_url, config_file, silent)) == os.EX_OK:
+    if (exitCode := validateCiConfig(base_url, config_file, silence)) == os.EX_OK:
         # Optionally could print message.
         pass
 
