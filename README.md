@@ -1,5 +1,5 @@
-pre-commit-gitlabci-lint
-------------------------
+GitLab CI validation pre-commit-hook
+------------------------------------
 
 This is a [pre-commit hook](https://pre-commit.com/) that uses GitLab's `/api/v4/ci/lint` lint endpoint to validate the contents of `.gitlab-ci.yml` files. This is similar in fashion to how CircleCI pre-commit hooks validate that product's required configs, which is by uploading your config to an endpoint.
 
@@ -7,7 +7,7 @@ By default, this tool sends your configuration to https://gitlab.com, though thi
 
 This tool has been extended and adapted from [kadrach's](https://github.com/kadrach/pre-commit-gitlabci-lint) implementation (cf. the [license](LICENSE.txt)).
 
-## Usage
+### Usage
 
 GitLab Lint API now [requires authorization](https://gitlab.com/gitlab-org/gitlab/-/issues/321290).
 
@@ -29,14 +29,14 @@ repos:
       # args: ["https://custom.gitlab.host.com"]
 ```
 
-## Development
+### Development
 
 Install dependencies by running `./scripts/dependencies.sh`. Or, if you already have `yarn` in your path, `yarn install:deps`.
 
-### Releases
+#### Releases
 
 Update `src/gitlabci_lint/validate.py/__version__`, `setup.py/version`-string, and tag this repo's master branch with the same version string (prefixed by '`v`.)
 
-## TODOs:
+### TODOs:
 
 - Allow passing multiple config files for validation in template repositories.
