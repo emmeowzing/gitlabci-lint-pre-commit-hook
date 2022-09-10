@@ -33,7 +33,7 @@ setup(
     keywords='pre-commit, GitLab, CI, continuous integration',
     package_dir={'': 'src'},
     packages=find_packages(where='src'),
-    python_requires='>=3.10, <4',
+    python_requires='>=3.8, <4',
     url = 'https://github.com/bjd2385/pre-commit-gitlabci-lint',
     install_requires=[],
     entry_points={
