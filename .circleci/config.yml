@@ -62,7 +62,7 @@ commands:
           name: MyPy
           command: |
             pip install mypy
-            mypy --config-file << parameters.configuration_file >> << parameters.modules_path >>
+            mypy --config-file << parameters.configuration_file >> << parameters.modules_path >> --python-version "$(python --version | awk '{ print $2 }')"
 
   pypi:
     description: Publish a package to PyPI.
@@ -118,7 +118,7 @@ jobs:
           modules_path: << parameters.modules_path >>
           configuration_file: << parameters.configuration_file >>
   mypy:
-    executor: python3-10
+    executor: << parameters.executor >>
     resource_class: small
     parameters:
       modules_path:
@@ -129,6 +129,9 @@ jobs:
         type: string
         description: Path to mypy configuration file
         default: .mypy.ini
+      executor:
+        type: executor
+        description: Python executor to run this job with.
     steps:
       - checkout
       - mypy:
@@ -183,7 +186,13 @@ workflows:
             branches:
               ignore:
                 - master
+
       - mypy:
+          name: mypy [<< matrix.executor >>]
+          matrix:
+            parameters:
+              executor: [python3-10, python3-9, python3-8]
+            alias: mypy
           filters:
             branches:
               ignore:
