@@ -81,6 +81,12 @@ def validateCiConfig(baseUrl: str, configFile: str, silent: bool = False) -> int
                     errprint('=======')
                 else:
                     print(f'Config file at {configFile} is valid.')
+            else:
+                with urlopen(request) as response:
+                    lint_output = json.loads(response.read())
+
+                if lint_output['status'] == 'invalid':
+                    returnValue = 1
 
         except HTTPError as exc:
             errprint(f'Error connecting to Gitlab: {exc}')
@@ -104,12 +110,12 @@ if __name__ in ('gitlabci_lint.validate', '__main__'):
     )
 
     parser.add_argument(
-        '-b', '--base_url', nargs='?', default='https://gitlab.com/',
+        '-b', '-B', '--base_url', nargs='?', default='https://gitlab.com/',
         help='Base GitLab URL.'
     )
 
     parser.add_argument(
-        '-c', '--config', nargs='?', default='.gitlab-ci.yml',
+        '-c', '-C', '--config', nargs='?', default='.gitlab-ci.yml',
         help='CI Config file to check.'
     )
 
@@ -119,7 +125,7 @@ if __name__ in ('gitlabci_lint.validate', '__main__'):
     )
 
     parser.add_argument(
-        '-q', '--quiet', action='store_true', default=False,
+        '-q', '-Q', '--quiet', action='store_true', default=False,
         help='Silently fail and pass, without output, unless improperly configured.'
     )
 
