@@ -6,5 +6,5 @@
     README.md.
   entry: gitlabci-lint
   language: python
-  files: .gitlab-ci.yml
+  #files: .gitlab-ci.yml
   pass_filenames: false
