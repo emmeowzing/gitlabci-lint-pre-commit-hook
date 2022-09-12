@@ -110,13 +110,13 @@ if __name__ in ('gitlabci_lint.validate', '__main__'):
     )
 
     parser.add_argument(
-        '-b', '-B', '--base_url', nargs='?', default='https://gitlab.com/',
-        help='Base GitLab URL.'
+        'configs', action='append', dest='configs', default=['.gitlab-ci.yml'],
+        help='CI Config files to check.'
     )
 
     parser.add_argument(
-        '-c', '-C', '--config', nargs='*', type=str, action='append', default='.gitlab-ci.yml',
-        help='CI Config file to check.'
+        '-b', '-B', '--base_url', nargs='?', default='https://gitlab.com/',
+        help='Base GitLab URL.'
     )
 
     parser.add_argument(
@@ -135,6 +135,7 @@ if __name__ in ('gitlabci_lint.validate', '__main__'):
     config_files = args.config
     silence = args.quiet
 
+    print(config_files)
     for config in config_files:
         if (exitCode := validateCiConfig(base_url, config_files, silence)) != os.EX_OK:
             sys.exit(exitCode)
