@@ -1,5 +1,5 @@
 - id: gitlabci-lint
-  name: Linting .gitlab-ci.yml
+  name: Linting GitLab CI configs
   description: |
     This hooks verifies that your Gitlab CI configuration is valid. You can
     pass in a self-hosted GitLab URL in your .pre-commit-config.yaml, see
