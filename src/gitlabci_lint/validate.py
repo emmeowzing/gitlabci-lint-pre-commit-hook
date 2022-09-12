@@ -13,6 +13,7 @@ from urllib.parse import urljoin
 from urllib.request import Request, urlopen
 from http import HTTPStatus
 from functools import partial
+from glob import glob
 
 
 __version__ = '1.1.0'
@@ -106,17 +107,17 @@ def validateCiConfig(baseUrl: str, configFile: str, silent: bool) -> int:
 if __name__ in ('gitlabci_lint.validate', '__main__'):
     parser = argparse.ArgumentParser(
         description=__doc__,
-        formatter_class=argparse.ArgumentDefaultsHelpFormatter
+        formatter_class=argparse.RawDescriptionHelpFormatter
     )
 
     parser.add_argument(
-        'configs', action='append', dest='configs', default=['.gitlab-ci.yml'],
-        help='CI Config files to check.'
+        '-c', '--config', action='append',
+        help='CI Config files to check. (default: .gitlab-ci.yml)'
     )
 
     parser.add_argument(
         '-b', '-B', '--base_url', nargs='?', default='https://gitlab.com/',
-        help='Base GitLab URL.'
+        help='Base GitLab URL. (default: https://gitlab.com/)'
     )
 
     parser.add_argument(
@@ -126,18 +127,21 @@ if __name__ in ('gitlabci_lint.validate', '__main__'):
 
     parser.add_argument(
         '-q', '-Q', '--quiet', action='store_true', default=False,
-        help='Silently fail and pass, without output, unless improperly configured.'
+        help='Silently fail and pass, without output, unless improperly configured. (default: False)'
     )
 
     args = parser.parse_args()
 
     base_url = args.base_url
     config_files = args.config
+    if not config_files:
+        # Set default, since there's a bug in argparse that I can't seem to overcome with specifying
+        # multiple flags and defaults.
+        config_files = ['.gitlab-ci.yml']
     silence = args.quiet
 
-    print(config_files)
     for config in config_files:
-        if (exitCode := validateCiConfig(base_url, config_files, silence)) != os.EX_OK:
+        if (exitCode := validateCiConfig(base_url, config, silence)) != os.EX_OK:
             sys.exit(exitCode)
 
     sys.exit(os.EX_OK)
