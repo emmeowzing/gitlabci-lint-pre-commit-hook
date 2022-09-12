@@ -15,7 +15,7 @@ from http import HTTPStatus
 from functools import partial
 
 
-__version__ = '1.1.1'
+__version__ = '1.1.3'
 
 
 if not (token := os.getenv('GITLAB_TOKEN')):
@@ -24,7 +24,6 @@ if not (token := os.getenv('GITLAB_TOKEN')):
 
 
 errprint = partial(print, file=sys.stderr)
-containingProjectName = os.path.basename(os.getcwd())
 
 
 def validateCiConfig(baseUrl: str, configFile: str, silent: bool) -> int:
@@ -53,7 +52,7 @@ def validateCiConfig(baseUrl: str, configFile: str, silent: bool) -> int:
         errprint(f'Cannot open {configFile}')
         returnValue = 1
     else:
-        url = urljoin(baseUrl, f'/api/v4/projects/{containingProjectName}/ci/lint')
+        url = urljoin(baseUrl, '/api/v4/ci/lint')
         headers = {
             'Content-Type': 'application/json',
             'Content-Length': str(len(data))
