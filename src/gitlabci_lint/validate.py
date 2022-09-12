@@ -15,7 +15,7 @@ from http import HTTPStatus
 from functools import partial
 
 
-__version__ = '1.1.3'
+__version__ = '1.1.4'
 
 
 if not (token := os.getenv('GITLAB_TOKEN')):
@@ -79,8 +79,12 @@ def validateCiConfig(baseUrl: str, configFile: str, silent: bool) -> int:
                         errprint(error)
                     returnValue = 1
                     errprint('=======')
+                elif lint_output['status'] == 'valid' and lint_output['warnings']:
+                    print(f'Config file at \'{configFile}\' is valid, with warnings:', end=' ')
+                    for warning in lint_output['warnings']:
+                        errprint(warning)
                 else:
-                    print(f'Config file at {configFile} is valid.')
+                    print(f'Config file at \'{configFile}\' is valid.')
             else:
                 with urlopen(request) as response:
                     lint_output = json.loads(response.read())
