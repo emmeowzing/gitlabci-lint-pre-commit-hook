@@ -7,15 +7,19 @@ By default, this tool sends your configuration to https://gitlab.com, though thi
 
 This tool has been extended and adapted from [kadrach's](https://github.com/kadrach/pre-commit-gitlabci-lint) implementation (cf. the [license](LICENSE.txt)).
 
-### Usage
+## Usage
+
+### Requirements
 
 GitLab Lint API now [requires authorization](https://gitlab.com/gitlab-org/gitlab/-/issues/321290).
 
 1. [Create Access Token](https://gitlab.com/-/profile/personal_access_tokens) with `api` scope.
 2. Set access token value as `GITLAB_TOKEN` environment variable.
-3. Ensure Python version available is 3.10.x or later.
+3. Ensure Python version available is 3.8 or later.
 
 **Warning** Please note the token should not be shared and if leaked can cause significant harm.
+
+### Example
 
 An example `.pre-commit-config.yaml`:
 
@@ -29,14 +33,15 @@ repos:
       # args: ["https://custom.gitlab.host.com"]
 ```
 
-### Development
+## Development
 
 Install dependencies by running `./scripts/dependencies.sh`. Or, if you already have `yarn` in your path, `yarn install:deps`.
 
-#### Releases
+### Releases
 
 Update `src/gitlabci_lint/validate.py/__version__`, `setup.py/version`-string, and tag this repo's master branch with the same version string (prefixed by '`v`.)
 
-### TODOs:
+## TODOs:
 
-- Allow passing multiple config files for validation in template repositories.
+[ ] Allow passing multiple config files for validation in template repositories.
+[ ]
