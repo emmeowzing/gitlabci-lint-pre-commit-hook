@@ -13,7 +13,6 @@ from urllib.parse import urljoin
 from urllib.request import Request, urlopen
 from http import HTTPStatus
 from functools import partial
-from glob import glob
 
 
 __version__ = '1.1.0'
@@ -127,7 +126,8 @@ if __name__ in ('gitlabci_lint.validate', '__main__'):
 
     parser.add_argument(
         '-q', '-Q', '--quiet', action='store_true', default=False,
-        help='Silently fail and pass, without output, unless improperly configured. (default: False)'
+        help='Silently fail and pass, without output, unless improperly configured. '
+             '(default: False)'
     )
 
     args = parser.parse_args()
