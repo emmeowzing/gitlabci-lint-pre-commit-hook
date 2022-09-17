@@ -1,0 +1,68 @@
+version: 2.1
+
+
+executors:
+
+
+jobs:
+  # TODO: Make it so I don't have to check out the code and install deps every time to reduce cost. Cache venv.
+  pylint:
+    executor: python3-10
+    resource_class: small
+    parameters:
+      modules_path:
+        type: string
+        description: Path to modules directory in package.
+        default: src
+      configuration_file:
+        type: string
+        description: Path to pylint configuration file
+        default: .pylintrc
+    steps:
+      - checkout
+      - run:
+          name: Install dependencies
+          command: pip install -r requirements.txt
+      - run:
+          name: Pylint
+          command: |
+            pip install pylint
+            pylint --rcfile=<< parameters.configuration_file >> << parameters.modules_path >>
+
+  mypy:
+    executor: << parameters.executor >>
+    resource_class: small
+    parameters:
+      modules_path:
+        type: string
+        description: Path to modules directory in package.
+        default: src
+      configuration_file:
+        type: string
+        description: Path to mypy configuration file
+        default: .mypy.ini
+      executor:
+        type: executor
+        description: Python executor to run this job with.
+    steps:
+      - checkout
+      - run:
+          name: Install dependencies
+          command: pip install -r requirements.txt
+      - run:
+          name: MyPy
+          command: |
+            pip install mypy
+            mypy --config-file << parameters.configuration_file >> << parameters.modules_path >> --python-version "$(python --version | grep -oP "[0-9].[0-9]+")"
+
+
+workflows:
+  src:
+    jobs:
+      - pylint
+      - mypy:
+          name: mypy [<< matrix.executor >>]
+          matrix:
+            parameters:
+              executor: [python3-10, python3-9, python3-8]
+            alias: mypy
