@@ -12,13 +12,6 @@ executors:
     docker:
       - image: cimg/python:3.10.6
 
-  python3-9:
-    docker:
-      - image: cimg/python:3.9.12
-
-  python3-8:
-    docker:
-      - image: cimg/python:3.8.13
 
 orbs:
   dynamic: bjd2385/dynamic-continuation@3.2.0
