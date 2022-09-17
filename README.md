@@ -56,8 +56,3 @@ Install dependencies by running `./scripts/dependencies.sh`. Or, if you already 
 ### Releases
 
 Update `src/gitlabci_lint/validate.py/__version__`, `setup.py/version`-string, and tag this repo's master branch with the same version string (prefixed by '`v`.)
-
-## TODOs:
-
-[ ] Allow passing multiple config files for validation in template repositories.
-[ ]
