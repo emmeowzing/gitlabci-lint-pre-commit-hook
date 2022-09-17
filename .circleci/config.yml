@@ -1,5 +1,8 @@
 version: 2.1
 
+setup: true
+
+
 executors:
   default:
     docker:
@@ -9,72 +12,12 @@ executors:
     docker:
       - image: cimg/python:3.10.6
 
-  python3-9:
-    docker:
-      - image: cimg/python:3.9.12
-
-  python3-8:
-    docker:
-      - image: cimg/python:3.8.13
 
 orbs:
-  shellcheck: circleci/shellcheck@3.1.1
+  dynamic: bjd2385/dynamic-continuation@3.2.0
 
 
-commands:
-  pylint:
-    description: Run pylint
-    parameters:
-      modules_path:
-        type: string
-        description: Path to modules directory in package.
-        default: src
-      configuration_file:
-        type: string
-        description: Path to pylint configuration file
-        default: .pylintrc
-    steps:
-      - run:
-          name: Install dependencies
-          command: pip install -r requirements.txt
-      - run:
-          name: Pylint
-          command: |
-            pip install pylint
-            pylint --rcfile=<< parameters.configuration_file >> << parameters.modules_path >>
-
-  mypy:
-    description: Run mypy
-    parameters:
-      modules_path:
-        type: string
-        description: Path to modules directory in package.
-        default: src
-      configuration_file:
-        type: string
-        description: Path to mypy configuration file
-        default: .mypy.ini
-    steps:
-      - run:
-          name: Install dependencies
-          command: pip install -r requirements.txt
-      - run:
-          name: MyPy
-          command: |
-            pip install mypy
-            mypy --config-file << parameters.configuration_file >> << parameters.modules_path >> --python-version "$(python --version | grep -oP "[0-9].[0-9]+")"
-
-  pypi:
-    description: Publish a package to PyPI.
-    steps:
-      - run:
-          name: Build package.
-          command: python setup.py sdist bdist_wheel
-      - run:
-          name: Publish package to PyPI.
-          command: |
-            pip install twine
-            twine upload dist/* -u $PYPI_USERNAME -p $API_TOKEN
+commands: {}
 
 
 jobs:
@@ -99,114 +42,37 @@ jobs:
             echo "$GITHUB_TOKEN" | gh auth login --with-token 2>/dev/null || true
             gh release create "$LATEST_TAG" --generate-notes
 
-  # TODO: Make it so I don't have to check out the code and install deps every time to reduce cost. Cache venv.
-  pylint:
-    executor: python3-10
-    resource_class: small
-    parameters:
-      modules_path:
-        type: string
-        description: Path to modules directory in package.
-        default: src
-      configuration_file:
-        type: string
-        description: Path to pylint configuration file
-        default: .pylintrc
-    steps:
-      - checkout
-      - pylint:
-          modules_path: << parameters.modules_path >>
-          configuration_file: << parameters.configuration_file >>
-  mypy:
-    executor: << parameters.executor >>
-    resource_class: small
-    parameters:
-      modules_path:
-        type: string
-        description: Path to modules directory in package.
-        default: src
-      configuration_file:
-        type: string
-        description: Path to mypy configuration file
-        default: .mypy.ini
-      executor:
-        type: executor
-        description: Python executor to run this job with.
-    steps:
-      - checkout
-      - mypy:
-          modules_path: << parameters.modules_path >>
-          configuration_file: << parameters.configuration_file >>
-
   publish-pypi:
     executor: python3-10
     resource_class: small
     steps:
       - checkout
-      - pypi
-
-  test-bats:
-    executor: python3-10
-    resource_class: small
-    parameters:
-      executable:
-        type: string
-        description: Location of the executable to run tests.
-        default: ./scripts/tests.sh
-    steps:
-      - checkout
       - run:
-          name: Install development package
-          command: |
-            python setup.py develop
-            sudo ln -s /home/circleci/.pyenv/versions/$(python --version | awk '{ print $2 }')/bin/gitlabci-lint /usr/local/bin/gitlabci-lint
-            gitlabci-lint --version
+          name: Build package.
+          command: python setup.py sdist bdist_wheel
       - run:
-          name: Run bats tests
+          name: Publish package to PyPI.
           command: |
-            sudo apt update && sudo apt install -y bats
-            << parameters.executable >>
+            pip install twine
+            twine upload dist/* -u $PYPI_USERNAME -p $API_TOKEN
 
 
 workflows:
   version: 2
 
-  on-commit:
+  gitlabci-lint:
     jobs:
-      - shellcheck/check:
-          dir: .
-          exclude: SC2148
+      - dynamic/continue:
+          context: orb-publishing
+          modules: |
+            scripts
+            tests
+            src
           filters:
             branches:
               ignore:
                 - master
 
-      - pylint:
-          filters:
-            branches:
-              ignore:
-                - master
-
-      - mypy:
-          name: mypy [<< matrix.executor >>]
-          matrix:
-            parameters:
-              executor: [python3-10, python3-9, python3-8]
-            alias: mypy
-          filters:
-            branches:
-              ignore:
-                - master
-
-      - test-bats:
-          context: gitlab
-          filters:
-            branches:
-              ignore:
-                - master
-
-  on-tag:
-    jobs:
       - generate-release:
           name: Generate release from tag
           context: github

@@ -1,0 +1,38 @@
+version: 2.1
+
+
+executors:
+  python3-10:
+    docker:
+      - image: cimg/python:3.10.6
+
+
+jobs:
+  test-bats:
+    executor: python3-10
+    resource_class: small
+    parameters:
+      executable:
+        type: string
+        description: Location of the executable to run tests.
+        default: ./scripts/tests.sh
+    steps:
+      - checkout
+      - run:
+          name: Install development package
+          command: |
+            python setup.py develop
+            sudo ln -s /home/circleci/.pyenv/versions/$(python --version | awk '{ print $2 }')/bin/gitlabci-lint /usr/local/bin/gitlabci-lint
+            gitlabci-lint --version
+      - run:
+          name: Run bats tests
+          command: |
+            sudo apt update && sudo apt install -y bats
+            << parameters.executable >>
+
+
+workflows:
+  tests:
+    jobs:
+      - test-bats:
+          context: gitlab
