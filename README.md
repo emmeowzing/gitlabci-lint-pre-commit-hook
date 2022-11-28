@@ -46,7 +46,7 @@ repos:
     rev: <latest release>
     hooks:
       - id: gitlabci-lint
-      # args: ["https://custom.gitlab.host.com"]
+      # args: [-b, 'https://custom.gitlab.host.com']
 ```
 
 ## Development
