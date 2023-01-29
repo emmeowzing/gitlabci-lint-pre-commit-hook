@@ -18,9 +18,11 @@ from functools import partial
 __version__ = '1.1.5'
 
 
-if not (token := os.getenv('GITLAB_TOKEN')):
-    print('\'GITLAB_TOKEN\' not set. Exiting.')
-    sys.exit(1)
+if not (token := os.getenv('GITLABCI_LINT_TOKEN')):
+    print('\'GITLABCI_LINT_TOKEN\' not set, checking for GITLAB_TOKEN.', file=sys.stderr)
+    if not (token := os.getenv('GITLAB_TOKEN')):
+        print('\'GITLAB_TOKEN\' not set. Exiting.', file=sys.stderr)
+        sys.exit(1)
 
 
 errprint = partial(print, file=sys.stderr)
