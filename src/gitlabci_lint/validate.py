@@ -15,7 +15,7 @@ from http import HTTPStatus
 from functools import partial
 
 
-__version__ = '1.1.5'
+__version__ = '1.1.6'
 
 
 if not (token := os.getenv('GITLABCI_LINT_TOKEN')):
