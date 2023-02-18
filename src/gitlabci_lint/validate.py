@@ -25,13 +25,6 @@ __version__ = meta.version('pre-commit-gitlabci-lint')
 errprint = partial(print, file=sys.stderr)
 
 
-if not (token := os.getenv('GITLABCI_LINT_TOKEN')):
-    errprint('\'GITLABCI_LINT_TOKEN\' not set, checking for GITLAB_TOKEN.')
-    if not (token := os.getenv('GITLAB_TOKEN')):
-        errprint('\'GITLAB_TOKEN\' not set. Exiting.')
-        sys.exit(1)
-
-
 def config() -> configparser.ConfigParser:
     """
     Read a config file, if it exists, from standard locations.
@@ -144,6 +137,7 @@ def validateCiConfig(baseUrl: str, configFile: List[str], silent: bool) -> int:
 
     return returnValue
 
+
 if __name__ in ('gitlabci_lint.validate', '__main__'):
     parser = argparse.ArgumentParser(
         description=__doc__,
@@ -151,7 +145,7 @@ if __name__ in ('gitlabci_lint.validate', '__main__'):
     )
 
     parser.add_argument(
-        '-c', '--config', action='append',
+        '-c', '--config', action='append', default=[],
         help='CI Config files to check. (default: .gitlab-ci.yml)'
     )
 
@@ -178,6 +172,12 @@ if __name__ in ('gitlabci_lint.validate', '__main__'):
 
     args = parser.parse_args()
 
+    if not (token := os.getenv('GITLABCI_LINT_TOKEN')):
+        errprint('\'GITLABCI_LINT_TOKEN\' not set, checking for GITLAB_TOKEN.')
+        if not (token := os.getenv('GITLAB_TOKEN')):
+            errprint('\'GITLAB_TOKEN\' not set. Exiting.')
+            sys.exit(1)
+
     base_url = args.base_url
     config_files = args.config
     hook_config_file = args.gitlab_ci_lint_config
@@ -188,8 +188,7 @@ if __name__ in ('gitlabci_lint.validate', '__main__'):
         config_files = ['.gitlab-ci.yml']
     silence = args.quiet
 
-    for config in config_files:
-        if (exitCode := validateCiConfig(base_url, config_files, silence)) != os.EX_OK:
+    if (exitCode := validateCiConfig(base_url, config_files, silence)) != os.EX_OK:
             sys.exit(exitCode)
 
     sys.exit(os.EX_OK)
