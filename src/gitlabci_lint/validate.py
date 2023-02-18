@@ -9,7 +9,7 @@ import os
 import sys
 import configparser
 import importlib.metadata as meta
-import path
+import pathlib
 
 from urllib.error import HTTPError
 from urllib.parse import urljoin
@@ -43,12 +43,15 @@ def config() -> configparser.ConfigParser:
         default_section='gitlab-ci'
     )
 
-    config_locations = ['.gitlab-ci-lint.toml', '$HOME/.config/gitlab-ci-lint/config.toml']
+    config_locations = [
+        '.gitlab-ci-lint.toml',
+        '$HOME/.config/gitlab-ci-lint/config.toml'
+    ]
 
     for loc in config_locations:
         try:
-            if path.Path(loc).exists():
-                c.read(path.Path(loc))
+            if pathlib.Path(loc).exists():
+                c.read(pathlib.Path(loc))
                 break
         except PermissionError:
             errprint(f'Could not access config file at {loc}, check permissions.')

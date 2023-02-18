@@ -37,7 +37,7 @@ setup(
     url = 'https://github.com/bjd2385/pre-commit-gitlabci-lint',
     install_requires=[],
     entry_points={
-        "console_scripts": ["gitlabci-lint = gitlabci_lint.validate:validateCiConfig"]
+        "console_scripts": ["gitlabci-lint = gitlabci_lint.validate"]
     },
     project_urls={  # Optional
         'Bug Reports': 'https://github.com/bjd2385/pre-commit-gitlabci-lint/issues',
