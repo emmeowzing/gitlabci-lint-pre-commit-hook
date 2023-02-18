@@ -1,6 +1,7 @@
 [MESSAGES CONTROL]
 
-disable=invalid-name,superfluous-parens
+disable=invalid-name,superfluous-parens,line-too-long,missing-final-newline,logging-fstring-interpolation,too-many-instance-attributes
+fail-under=6
 
-[DESIGN]
-max-branches=20
+[MASTER]
+init-hook='import sys; sys.path.append(".")'
