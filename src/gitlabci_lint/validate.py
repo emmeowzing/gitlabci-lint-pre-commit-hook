@@ -187,10 +187,6 @@ def cli() -> None:
 
     args = parser.parse_args()
 
-    if not ((token := os.getenv('GITLABCI_LINT_TOKEN')) or (token := os.getenv('GITLAB_TOKEN'))):
-        errprint('ERROR: Neither \'GITLABCI_LINT_TOKEN\' nor \'GITLAB_TOKEN\' set.')
-        sys.exit(1)
-
     # If a gitlabci-lint config was specified via CLI, override the default search locations.
     hook_config_file_CLI = args.gitlabci_lint_config
     if hook_config_file_CLI:
@@ -207,6 +203,7 @@ def cli() -> None:
             json.loads(filesystem_config[default_config_section].get('configs', str(default_configs)))
         )
     )
+    token_CONF = os.path.expandvars(filesystem_config[default_config_section].get('configs', None))
 
     quiet_CLI = args.quiet
     base_url_CLI = args.base_url
@@ -222,6 +219,13 @@ def cli() -> None:
         # Set default, since there's a bug in argparse that I can't seem to overcome with specifying
         # multiple flags and defaults.
         configs = ['.gitlab-ci.yml']
+
+    token: Optional[str]
+    if token_CONF:
+        token = os.path.expandvars(token_CONF)
+    elif not ((token := os.getenv('GITLABCI_LINT_TOKEN')) or (token := os.getenv('GITLAB_TOKEN'))):
+        errprint('ERROR: Neither \'GITLABCI_LINT_TOKEN\' nor \'GITLAB_TOKEN\' set.')
+        sys.exit(1)
 
     if (exitCode := validateCiConfig(token, base_url, configs, quiet)) != os.EX_OK:
             sys.exit(exitCode)
