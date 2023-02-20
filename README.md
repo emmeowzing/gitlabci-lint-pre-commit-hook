@@ -1,4 +1,4 @@
-# GitLab CI lint pre-commit-hook
+# GitLab CI lint pre-commit hook
 
 This is a [pre-commit](https://pre-commit.com/) hook that uses GitLab's `/api/v4/ci/lint` linting endpoint to validate the contents of `.gitlab-ci.yml` files. This is similar to how CircleCI pre-commit hooks validate that product's required configs: by uploading your config to their API.
 
