@@ -2,3 +2,4 @@
 quiet = false
 base-url = https://gitlab.com
 configs = [ .gitlab-ci.yml ]
+token = "$GITLAB_TOKEN"

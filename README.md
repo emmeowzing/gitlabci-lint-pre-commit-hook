@@ -28,7 +28,7 @@ By default, this tool sends your configuration to [https://gitlab.com](https://g
 
 GitLab Lint API now [requires authorization](https://gitlab.com/gitlab-org/gitlab/-/issues/321290).
 
-1. [Create Access Token](https://gitlab.com/-/profile/personal_access_tokens) with `api` scope.
+1. [Create an access token](https://gitlab.com/-/profile/personal_access_tokens) with `api` scope.
 2. Set access token value as a `GITLAB_TOKEN` or `GITLABCI_LINT_TOKEN` environment variable.
 3. Ensure Python version available is 3.8 or later.
 
@@ -57,6 +57,7 @@ No configuration file is required for use. However, if you'd rather specify sett
 quiet = false
 base-url = "https://gitlab.com"
 configs = [ ".gitlab-ci.yml" ]
+token = "$GITLAB_TOKEN"
 ```
 
 ## Development
