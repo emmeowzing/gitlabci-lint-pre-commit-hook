@@ -38,7 +38,7 @@ GitLab Lint API now [requires authorization](https://gitlab.com/gitlab-org/gitla
 2. Set access token value as a `GITLAB_TOKEN` or `GITLABCI_LINT_TOKEN` environment variable.
 3. Ensure Python version available is 3.8 or later.
 
-**Warning** Please note the token should not be shared and if leaked can cause significant harm.
+> **Warning:** GitLab tokens should not be shared. If leaked they can cause significant harm. Never store tokens in a repoitory.
 
 ### Example
 
