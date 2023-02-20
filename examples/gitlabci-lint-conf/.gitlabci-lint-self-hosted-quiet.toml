@@ -1,4 +1,4 @@
-[gitlab-ci]
+[gitlabci-lint]
 quiet = true
 base-url = https://git.ops.sbe-vision.com
 configs = [ .gitlab-ci.yml ]

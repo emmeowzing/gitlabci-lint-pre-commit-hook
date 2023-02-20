@@ -1,14 +1,4 @@
 repos:
-  # - repo: https://github.com/bjd2385/pre-commit-gitlabci-lint
-  #   rev: v1.1.6
-  #   hooks:
-  #     - id: gitlabci-lint
-  #       args:
-  #         [
-  #           -b, 'https://git.ops.sbe-vision.com',
-  #           -c, .gitlab-ci.yml
-  #         ]
-
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.4.0
     hooks:
@@ -49,6 +39,22 @@ repos:
     hooks:
       - id: circleci-config-validate
 
+  # - repo: https://github.com/hadolint/hadolint
+  #   rev: v2.12.1-beta
+  #   hooks:
+  #     - id: hadolint
+  #       args:
+  #         - Dockerfile
+  #         - --config
+  #         - .hadolint.yaml
+
+  # - repo: https://github.com/k-ogawa-1988/yamale-pre-commit
+  #   rev: v0.0.2
+  #   hooks:
+  #     - id: yamale-validate
+  #       args:
+  #         - conf/schema.yaml
+
   - repo: https://github.com/PyCQA/pylint
     rev: v2.16.2
     hooks:
@@ -57,14 +63,7 @@ repos:
           - --rcfile=.pylintrc
           - src/
 
-  # - repo: https://github.com/abravalheri/validate-pyproject
-  #   rev: v0.12.1
-  #   hooks:
-  #     - id: validate-pyproject
-
-  # - repo: https://github.com/charliermarsh/ruff-pre-commit
-  #   rev: v0.0.237
-  #   hooks:
-  #     - id: ruff
-  #       args: [--fix]
-  #       exclude: ^resources
+  - repo: https://github.com/premiscale/pre-commit-hooks
+    rev: v0.0.3
+    hooks:
+    -   id: msg-issue-prefix

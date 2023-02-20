@@ -1,0 +1,12 @@
+stages:
+  - validate
+  - build
+  - deploy
+
+.install-dependencies:
+  stage: build
+  script:
+    - apt update && apt install htop
+
+setup:
+  extends: .install-dependencies
