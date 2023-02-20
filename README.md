@@ -22,6 +22,12 @@ options:
 
 By default, this tool sends your configuration to [https://gitlab.com](https://gitlab.com), though this can be overridden (see below for an example or the help text above).
 
+## Install
+
+```shell
+pip install pre-commit-gitlabci-lint
+```
+
 ## Usage
 
 ### Requirements
