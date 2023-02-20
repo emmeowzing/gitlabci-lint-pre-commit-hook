@@ -52,6 +52,13 @@ repos:
 
 No configuration file is required for use. However, if you'd rather specify configuration options in your repo, you may create a config file `.gitlabci-lint.toml` in the repo, or `$HOME/.config/.gitlabci-lint/config.toml`, such as the following.
 
+```toml
+[gitlabci-lint]
+quiet = false
+base-url = https://gitlab.com
+configs = [ .gitlab-ci.yml ]
+```
+
 ## Development
 
 Install dependencies by running `./scripts/dependencies.sh`. Or, if you already have `yarn` in your path, `yarn install:deps`.
