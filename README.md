@@ -50,7 +50,7 @@ repos:
 
 ### Configuration files
 
-No configuration file is required for use. However, if you'd rather specify configuration options in your repo, you may create a config file `.gitlabci-lint.toml` in the repo, or `$HOME/.config/.gitlabci-lint/config.toml`, such as the following.
+No configuration file is required for use. However, if you'd rather specify settings in your repo, you may create a config file located at `/root/of/repo/.gitlabci-lint.toml`, or `$HOME/.config/.gitlabci-lint/config.toml`, such as the following.
 
 ```toml
 [gitlabci-lint]
