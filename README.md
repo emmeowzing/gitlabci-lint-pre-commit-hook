@@ -55,8 +55,8 @@ No configuration file is required for use. However, if you'd rather specify conf
 ```toml
 [gitlabci-lint]
 quiet = false
-base-url = https://gitlab.com
-configs = [ .gitlab-ci.yml ]
+base-url = "https://gitlab.com"
+configs = [ ".gitlab-ci.yml" ]
 ```
 
 ## Development
