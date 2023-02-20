@@ -23,7 +23,7 @@ long_description = (here / 'README.md').read_text(encoding='utf-8')
 
 setup(
     name='pre-commit-gitlabci-lint',
-    version='1.1.6',
+    version='1.2.0',
     description='Validate your GitLab CI with GitLab\'s API endpoint.',
     cmdclass=cmd_classes,
     long_description=long_description,
@@ -37,7 +37,7 @@ setup(
     url = 'https://github.com/bjd2385/pre-commit-gitlabci-lint',
     install_requires=[],
     entry_points={
-        "console_scripts": ["gitlabci-lint = gitlabci_lint.validate:validateCiConfig"]
+        "console_scripts": ["gitlabci-lint = gitlabci_lint.validate:cli"]
     },
     project_urls={  # Optional
         'Bug Reports': 'https://github.com/bjd2385/pre-commit-gitlabci-lint/issues',

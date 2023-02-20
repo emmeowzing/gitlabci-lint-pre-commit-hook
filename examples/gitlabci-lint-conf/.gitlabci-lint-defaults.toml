@@ -1,0 +1,4 @@
+[gitlabci-lint]
+quiet = false
+base-url = https://gitlab.com
+configs = [ .gitlab-ci.yml ]
