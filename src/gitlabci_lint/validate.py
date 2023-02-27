@@ -168,7 +168,7 @@ def cli() -> None:
     )
 
     parser.add_argument(
-        '-B', '--base-url', nargs='?', default=default_base_url,
+        '-b', '-B', '--base-url', nargs='?', default=default_base_url,
         help=f'Base GitLab URL. (default: {default_base_url})'
     )
 
