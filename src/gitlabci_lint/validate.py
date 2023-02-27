@@ -133,8 +133,6 @@ def config(conf: Optional[str] =None) -> configparser.ConfigParser:
         os.path.expandvars('$HOME/.config/gitlabci-lint/config.toml')
     ]
 
-    print(config_locations)
-
     for loc in config_locations:
         try:
             if pathlib.Path(loc).exists():
@@ -203,7 +201,7 @@ def cli() -> None:
             json.loads(filesystem_config[default_config_section].get('configs', str(default_configs)))
         )
     )
-    token_CONF = os.path.expandvars(filesystem_config[default_config_section].get('configs', None))
+    token_CONF = os.path.expandvars(filesystem_config[default_config_section].get('configs', ''))
 
     quiet_CLI = args.quiet
     base_url_CLI = args.base_url
