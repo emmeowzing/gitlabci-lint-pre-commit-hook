@@ -4,7 +4,7 @@ This is a [pre-commit](https://pre-commit.com/) hook that uses GitLab's `/api/v4
 
 ```text
 $ gitlabci-lint --help
-usage: gitlabci-lint [-h] [-c CONFIGS] [-C GITLABCI_LINT_CONFIG] [-B [BASE_URL]] [--version] [-q]
+usage: gitlabci-lint [-h] [-c CONFIGS] [-C GITLABCI_LINT_CONFIG] [-b [BASE_URL]] [--version] [-q]
 
 Validate your GitLab CI with GitLab's API endpoint.
 
@@ -14,7 +14,7 @@ options:
                         CI Config files to check. (default: .gitlab-ci.yml)
   -C GITLABCI_LINT_CONFIG, --gitlabci-lint-config GITLABCI_LINT_CONFIG
                         Pass parameters via config file. Looks first at '.gitlabci-lint.toml', then '$HOME/.config/gitlabci-lint/config.toml', unless otherwise specified.
-  -B [BASE_URL], --base-url [BASE_URL]
+  -b [BASE_URL], -B [BASE_URL], --base-url [BASE_URL]
                         Base GitLab URL. (default: https://gitlab.com/)
   --version             show program's version number and exit
   -q, -Q, --quiet       Silently fail and pass, without output, unless improperly configured. (default: False)
