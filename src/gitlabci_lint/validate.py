@@ -225,10 +225,7 @@ def cli() -> None:
         errprint('ERROR: Neither \'GITLABCI_LINT_TOKEN\' nor \'GITLAB_TOKEN\' set.')
         sys.exit(1)
 
-    if (exitCode := validateCiConfig(token, base_url, configs, quiet)) != os.EX_OK:
-            sys.exit(exitCode)
-
-    sys.exit(os.EX_OK)
+    sys.exit(validateCiConfig(token, base_url, configs, quiet))
 
 
 if __name__ == '__main__':
