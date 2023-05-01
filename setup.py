@@ -35,7 +35,9 @@ setup(
     packages=find_packages(where='src'),
     python_requires='>=3.8, <4',
     url = 'https://github.com/bjd2385/pre-commit-gitlabci-lint',
-    install_requires=[],
+    install_requires=[
+        'toml'
+    ],
     entry_points={
         "console_scripts": ["gitlabci-lint = gitlabci_lint.validate:cli"]
     },

@@ -7,7 +7,7 @@ import argparse
 import json
 import os
 import sys
-import configparser
+import toml
 import importlib.metadata as meta
 import pathlib
 
@@ -21,7 +21,6 @@ from typing import List, Optional
 
 __version__ = meta.version('pre-commit-gitlabci-lint')
 
-
 errprint = partial(print, file=sys.stderr)
 
 default_config_section = 'gitlabci-lint'
@@ -30,12 +29,13 @@ default_quiet: bool = False
 default_configs: List[str] = list()
 
 
-def validateCiConfig(token: str, baseUrl: str, configs: List[str], silent: bool) -> int:
+def validateCiConfig(token: str, baseUrl: str, project_id: str, configs: List[str], silent: bool) -> int:
     """
     Validate the input GitLab CI config against the validation API endpoint.
 
     Args:
         baseUrl: The location of the GitLab instance.
+        project_id: A gitlab project id.
         configFile: The GitLab CI file to validate.
         silent: Whether or not to output text on success or failure, unless improperly configured.
                 Allows the use of exit codes in scripts without redirecting stdout.
@@ -57,7 +57,7 @@ def validateCiConfig(token: str, baseUrl: str, configs: List[str], silent: bool)
             errprint(f'Cannot open {config}')
             returnValue = 1
         else:
-            url = urljoin(baseUrl, '/api/v4/ci/lint')
+            url = urljoin(baseUrl, f'/api/v4/projects/{project_id}/ci/lint')
             headers = {
                 'Content-Type': 'application/json',
                 'Content-Length': str(len(data))
@@ -86,13 +86,13 @@ def validateCiConfig(token: str, baseUrl: str, configs: List[str], silent: bool)
                     with urlopen(request) as response:
                         lint_output = json.loads(response.read())
 
-                    if lint_output['status'] == 'invalid':
+                    if not lint_output['valid']:
                         errprint('=======')
                         for error in lint_output['errors']:
                             errprint(error)
                         returnValue = 1
                         errprint('=======')
-                    elif lint_output['status'] == 'valid' and lint_output['warnings']:
+                    elif lint_output['valid'] and lint_output['warnings']:
                         print(f'Config file at \'{config}\' is valid, with warnings:', end=' ')
                         for warning in lint_output['warnings']:
                             errprint(warning)
@@ -117,17 +117,13 @@ def validateCiConfig(token: str, baseUrl: str, configs: List[str], silent: bool)
     return returnValue
 
 
-def config(conf: Optional[str] =None) -> configparser.ConfigParser:
+def config(conf: Optional[str] =None) -> dict:
     """
     Read a config file, if it exists, from standard locations.
 
     Returns:
         dict: The parsed config file.
     """
-    c = configparser.ConfigParser(
-        default_section=default_config_section
-    )
-
     config_locations = [conf] if conf else [
         '.gitlabci-lint.toml',
         os.path.expandvars('$HOME/.config/gitlabci-lint/config.toml')
@@ -136,8 +132,7 @@ def config(conf: Optional[str] =None) -> configparser.ConfigParser:
     for loc in config_locations:
         try:
             if pathlib.Path(loc).exists():
-                c.read(pathlib.Path(loc))
-                break
+                return toml.load(pathlib.Path(loc))
             elif conf:
                 errprint(f'Could not locate config file at {loc}, please ensure this file exists.')
                 sys.exit(1)
@@ -145,7 +140,7 @@ def config(conf: Optional[str] =None) -> configparser.ConfigParser:
             errprint(f'Could not access config file at {loc}, check permissions.')
             sys.exit(1)
 
-    return c
+    return {}
 
 
 def cli() -> None:
@@ -173,6 +168,11 @@ def cli() -> None:
     )
 
     parser.add_argument(
+        '-p', '-P', '--project-id',
+        help='Project ID to use with the lint API.'
+    )
+
+    parser.add_argument(
         '--version', action='version',
         version=f'%(prog)s {__version__}'
     )
@@ -187,45 +187,43 @@ def cli() -> None:
 
     # If a gitlabci-lint config was specified via CLI, override the default search locations.
     hook_config_file_CLI = args.gitlabci_lint_config
-    if hook_config_file_CLI:
-        filesystem_config = config(*hook_config_file_CLI)
-    else:
-        filesystem_config = config()
+    filesystem_config = config(*hook_config_file_CLI) if hook_config_file_CLI else config()
 
     # Parse a potential config file, with defaults / fallback values matching the CLI's defaults.
-    quiet_CONF = filesystem_config[default_config_section].get('quiet', str(default_quiet).lower())
-    base_url_CONF = os.path.expandvars(filesystem_config[default_config_section].get('base-url', default_base_url))
-    configs_CONF = list(
-        map(
-            os.path.expandvars,
-            json.loads(filesystem_config[default_config_section].get('configs', str(default_configs)))
-        )
-    )
-    token_CONF = os.path.expandvars(filesystem_config[default_config_section].get('configs', ''))
+    gitlabci_lint_section = filesystem_config.get('gitlabci-lint', {})
+    quiet_CONF = gitlabci_lint_section.get('quiet', default_quiet)
+    base_url_CONF = os.path.expandvars(gitlabci_lint_section.get('base-url', default_base_url))
+    project_id_CONF = os.path.expandvars(gitlabci_lint_section.get('project-id', ''))
+    configs_CONF = list(map(os.path.expandvars, gitlabci_lint_section.get('configs', default_configs)))
+    token_CONF = os.path.expandvars(gitlabci_lint_section.get('token', ''))
 
     quiet_CLI = args.quiet
     base_url_CLI = args.base_url
     configs_CLI = args.configs
+    project_id_CLI = args.project_id
 
     # Decide which vars, configuration file or cli, take precendence. Basically how this logic works is, if a setting is
     # enabled in either the config file or via CLI args, it takes precedence.
     quiet = quiet_CONF == 'true' or quiet_CLI
     base_url = base_url_CLI if (base_url_CLI != default_base_url) else (base_url_CONF if (base_url_CONF != default_base_url) else base_url_CLI)
     configs = configs_CLI if (configs_CLI != default_configs) else (configs_CONF if (configs_CONF != default_configs) else configs_CLI)
+    project_id = project_id_CLI if project_id_CLI else project_id_CONF
+    if not project_id:
+        errprint('ERROR: No project ID specified. Please specify a project ID as a command line argument or in the config file.')
+        sys.exit(1)
 
     if not configs:
         # Set default, since there's a bug in argparse that I can't seem to overcome with specifying
         # multiple flags and defaults.
         configs = ['.gitlab-ci.yml']
 
-    token: Optional[str]
     if token_CONF:
         token = os.path.expandvars(token_CONF)
     elif not ((token := os.getenv('GITLABCI_LINT_TOKEN')) or (token := os.getenv('GITLAB_TOKEN'))):
         errprint('ERROR: Neither \'GITLABCI_LINT_TOKEN\' nor \'GITLAB_TOKEN\' set.')
         sys.exit(1)
 
-    sys.exit(validateCiConfig(token, base_url, configs, quiet))
+    sys.exit(validateCiConfig(token, base_url, project_id, configs, quiet))
 
 
 if __name__ == '__main__':
