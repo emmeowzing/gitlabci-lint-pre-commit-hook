@@ -1,6 +1,6 @@
 # GitLab CI lint pre-commit hook
 
-This is a [pre-commit](https://pre-commit.com/) hook that uses GitLab's `/api/v4/ci/lint` linting endpoint to validate the contents of `.gitlab-ci.yml` files. This is similar to how CircleCI pre-commit hooks validate that product's required configs: by uploading your config to their API.
+This is a [pre-commit](https://pre-commit.com/) hook that uses GitLab's `/api/v4/ci/lint` linting endpoint to validate the contents of `.gitlab-ci.yml` files. This is similar to CircleCI pre-commit hooks that validate that product's configuration files.
 
 ```text
 $ gitlabci-lint --help
@@ -20,8 +20,6 @@ options:
   -q, -Q, --quiet       Silently fail and pass, without output, unless improperly configured. (default: False)
 ```
 
-By default, this tool sends your configuration to [https://gitlab.com](https://gitlab.com), though this can be overridden (see below for an example or the help text above).
-
 ## Install
 
 ```shell
@@ -30,15 +28,11 @@ pip install pre-commit-gitlabci-lint
 
 ## Usage
 
-### Requirements
-
-GitLab Lint API now [requires authorization](https://gitlab.com/gitlab-org/gitlab/-/issues/321290).
+### Setup
 
 1. [Create an access token](https://gitlab.com/-/profile/personal_access_tokens) with `api` scope.
-2. Set access token value as a `GITLAB_TOKEN` or `GITLABCI_LINT_TOKEN` environment variable.
-3. Ensure Python version available is 3.8 or later.
-
-> **Warning:** GitLab tokens should not be shared. If leaked they can cause significant harm. Never store tokens in a repoitory.
+2. Set access token value in an environment variable named `GITLAB_TOKEN` or `GITLABCI_LINT_TOKEN`.
+3. Ensure the virtualenv Python version is 3.8 or later.
 
 ### Example
 
@@ -54,7 +48,7 @@ repos:
       # args: [-b, 'https://custom.gitlab.host.com']
 ```
 
-### Configuration files
+### Use configuration files
 
 No configuration file is required for use. However, if you'd rather specify settings in your repo, you may create a config file located at `/root/of/repo/.gitlabci-lint.toml`, or `$HOME/.config/.gitlabci-lint/config.toml`, such as the following.
 
@@ -65,11 +59,3 @@ base-url = "https://gitlab.com"
 configs = [ ".gitlab-ci.yml" ]
 token = "$GITLAB_TOKEN"
 ```
-
-## Development
-
-Install dependencies by running `./scripts/dependencies.sh`. Or, if you already have `yarn` in your path, `yarn install:deps`.
-
-### Releases
-
-Update `setup.py/version`-string and tag this repo's master branch with the same version string (prefixed by '`v`.)
