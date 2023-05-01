@@ -1,3 +1,4 @@
+fail_fast: true
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.4.0
@@ -11,21 +12,13 @@ repos:
       - id: trailing-whitespace
 
   - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v1.0.1
+    rev: v1.2.0
     hooks:
       - id: mypy
         args:
           - --install-types
           - --non-interactive
           - --config-file=.mypy.ini
-
-  # - repo: https://github.com/mgedmin/check-manifest
-  #   rev: "0.48"
-  #   hooks:
-  #     - id: check-manifest
-  #       args:
-  #        - --ignore
-  #        - "*.json,*.txt,*.yaml,.mypy.ini,config/*.md,docker/*.sh,,examples/*,helm/*,package/*,scripts/*,service/*,tests/*,.circleci/*,.pylintrc,.tool-versions,docker/**/*,helm/**/*,examples/**/*"
 
   - repo: https://github.com/jumanjihouse/pre-commit-hooks
     rev: 3.0.0
@@ -39,31 +32,7 @@ repos:
     hooks:
       - id: circleci-config-validate
 
-  # - repo: https://github.com/hadolint/hadolint
-  #   rev: v2.12.1-beta
-  #   hooks:
-  #     - id: hadolint
-  #       args:
-  #         - Dockerfile
-  #         - --config
-  #         - .hadolint.yaml
-
-  # - repo: https://github.com/k-ogawa-1988/yamale-pre-commit
-  #   rev: v0.0.2
-  #   hooks:
-  #     - id: yamale-validate
-  #       args:
-  #         - conf/schema.yaml
-
-  - repo: https://github.com/PyCQA/pylint
-    rev: v2.16.2
-    hooks:
-      - id: pylint
-        args:
-          - --rcfile=.pylintrc
-          - src/
-
   - repo: https://github.com/premiscale/pre-commit-hooks
-    rev: v0.0.3
+    rev: v0.0.9
     hooks:
     -   id: msg-issue-prefix
