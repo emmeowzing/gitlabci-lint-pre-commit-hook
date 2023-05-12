@@ -16,6 +16,8 @@ options:
                         Pass parameters via config file. Looks first at '.gitlabci-lint.toml', then '$HOME/.config/gitlabci-lint/config.toml', unless otherwise specified.
   -b [BASE_URL], -B [BASE_URL], --base-url [BASE_URL]
                         Base GitLab URL. (default: https://gitlab.com/)
+  -p PROJECT_ID, -P PROJECT_ID, --project-id PROJECT_ID
+                        Project ID to use with the lint API.
   --version             show program's version number and exit
   -q, -Q, --quiet       Silently fail and pass, without output, unless improperly configured. (default: False)
 ```
@@ -32,7 +34,8 @@ pip install pre-commit-gitlabci-lint
 
 1. [Create an access token](https://gitlab.com/-/profile/personal_access_tokens) with `api` scope.
 2. Set access token value in an environment variable named `GITLAB_TOKEN` or `GITLABCI_LINT_TOKEN`.
-3. Ensure the virtualenv Python version is 3.8 or later.
+3. Add the projectId for your gitlab project as a command line argument, or set it in the config file.
+4. Ensure the virtualenv Python version is 3.8 or later.
 
 ### Example
 
@@ -45,7 +48,7 @@ repos:
     rev: <latest release>
     hooks:
       - id: gitlabci-lint
-      # args: [-b, 'https://custom.gitlab.host.com']
+      # args: [-b, 'https://custom.gitlab.host.com', '-p', '12345678']
 ```
 
 ### Use configuration files
@@ -56,6 +59,7 @@ No configuration file is required for use. However, if you'd rather specify sett
 [gitlabci-lint]
 quiet = false
 base-url = "https://gitlab.com"
+project-id = "12345678"
 configs = [ ".gitlab-ci.yml" ]
 token = "$GITLAB_TOKEN"
 ```
