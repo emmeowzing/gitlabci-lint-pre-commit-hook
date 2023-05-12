@@ -23,7 +23,7 @@ long_description = (here / 'README.md').read_text(encoding='utf-8')
 
 setup(
     name='pre-commit-gitlabci-lint',
-    version='1.2.2',
+    version='1.3.0',
     description='Validate your GitLab CI with GitLab\'s API endpoint.',
     cmdclass=cmd_classes,
     long_description=long_description,
