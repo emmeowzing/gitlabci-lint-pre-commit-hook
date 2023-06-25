@@ -11,7 +11,7 @@ mypy==0.991
 mypy-extensions==0.4.4
 nodeenv==1.7.0
 platformdirs==2.5.2
-pre-commit==2.20.0
+pre-commit==2.21.0
 pylint==2.15.2
 PyYAML==6.0
 setupext-janitor==1.1.2
