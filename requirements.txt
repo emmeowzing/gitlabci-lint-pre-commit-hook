@@ -1,5 +1,5 @@
 astroid==2.12.9
-cfgv==3.3.1
+cfgv==3.4.0
 dill==0.3.5.1
 distlib==0.3.6
 filelock==3.8.0
