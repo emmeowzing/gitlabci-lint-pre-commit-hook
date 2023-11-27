@@ -10,7 +10,7 @@ orbs:
 
 
 workflows:
-  password-store-operator:
+  gitlabci-lint:
     jobs:
       - dynamic/continue:
           context: circleci
