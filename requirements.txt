@@ -13,7 +13,7 @@ nodeenv==1.7.0
 platformdirs==2.5.2
 pre-commit==2.20.0
 pylint==2.15.2
-PyYAML==6.0
+PyYAML==6.0.1
 setupext-janitor==1.1.2
 toml==0.10.2
 tomli==2.0.1
