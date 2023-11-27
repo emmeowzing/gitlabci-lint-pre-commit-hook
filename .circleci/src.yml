@@ -1,5 +1,8 @@
 version: 2.1
 
+orbs:
+  general: premiscale/general@1.0.3
+
 
 executors:
   python3-10:
@@ -15,65 +18,52 @@ executors:
       - image: cimg/python:3.8.13
 
 
-jobs:
-  # TODO: Make it so I don't have to check out the code and install deps every time to reduce cost. Cache venv.
-  pylint:
-    executor: python3-10
-    resource_class: small
-    parameters:
-      modules_path:
-        type: string
-        description: Path to modules directory in package.
-        default: src
-      configuration_file:
-        type: string
-        description: Path to pylint configuration file
-        default: .pylintrc
-    steps:
-      - checkout
-      - run:
-          name: Install dependencies
-          command: pip install -r requirements.txt
-      - run:
-          name: Pylint
-          command: |
-            pip install pylint
-            pylint --rcfile=<< parameters.configuration_file >> << parameters.modules_path >>
-
-  mypy:
-    executor: << parameters.executor >>
-    resource_class: small
-    parameters:
-      modules_path:
-        type: string
-        description: Path to modules directory in package.
-        default: src
-      configuration_file:
-        type: string
-        description: Path to mypy configuration file
-        default: .mypy.ini
-      executor:
-        type: executor
-        description: Python executor to run this job with.
-    steps:
-      - checkout
-      - run:
-          name: Install dependencies
-          command: pip install -r requirements.txt
-      - run:
-          name: MyPy
-          command: |
-            pip install mypy
-            mypy --config-file << parameters.configuration_file >> << parameters.modules_path >> --python-version "$(python --version | grep -oP "[0-9].[0-9]+")"
-
-
 workflows:
   src:
     jobs:
-      - pylint
-      - mypy:
+      - general/python-pylint:
+          name: pylint
+          modules_path: src/
+          context: nexus
+
+      - general/python-mypy:
           name: mypy [<< matrix.executor >>]
           matrix:
             parameters:
-              executor: [python3-10, python3-9, python3-8]
+              executor:
+                - python3-10
+                - python3-9
+                - python3-8
             alias: mypy
+
+      # develop
+
+      - general/python-release-poetry:
+          name: twine upload [python-pypi]
+          context: nexus
+          repository: python-develop
+          version: 0.0.<< pipeline.number >>
+          pypirc-config: .pypirc
+          requires:
+            - pylint
+            - mypy
+          filters:
+            branches:
+              ignore:
+                - master
+
+      # master
+
+      - general/python-release-poetry:
+          name: twine upload [python-pypi]
+          context: pypi
+          repository: python-master
+          version: 0.0.<< pipeline.number >>
+          pypirc-config: .pypirc
+          requires:
+            - pylint
+            - mypy
+          filters:
+            branches:
+              only:
+                - master

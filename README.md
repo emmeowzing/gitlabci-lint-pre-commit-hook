@@ -28,6 +28,12 @@ options:
 pip install pre-commit-gitlabci-lint
 ```
 
+### Specific versions
+
+```shell
+pip install pre-commit-gitlabci-lint==<desired-version>
+```
+
 ## Usage
 
 ### Setup
@@ -53,7 +59,7 @@ repos:
 
 ### Use configuration files
 
-No configuration file is required for use. However, if you'd rather specify settings in your repo, you may create a config file located at `/root/of/repo/.gitlabci-lint.toml`, or `$HOME/.config/.gitlabci-lint/config.toml`, such as the following.
+A configuration file is not required for use. However, if you'd rather specify settings in a file that is checked into your project's VCS, you may create a config file located at `/root/of/repo/.gitlabci-lint.toml`, or `$HOME/.config/.gitlabci-lint/config.toml`, such as the following.
 
 ```toml
 [gitlabci-lint]

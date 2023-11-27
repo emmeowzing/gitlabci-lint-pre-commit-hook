@@ -3,89 +3,67 @@ version: 2.1
 setup: true
 
 
-executors:
-  default:
-    docker:
-      - image: cimg/base:stable
-
-  python3-10:
-    docker:
-      - image: cimg/python:3.10.6
-
-
 orbs:
-  dynamic: bjd2385/dynamic-continuation@3.2.0
-
-
-commands: {}
-
-
-jobs:
-  generate-release:
-    executor: default
-    resource_class: small
-    steps:
-      - checkout
-      - run:
-          name: Install gh CLI
-          command: |+
-            wget https://github.com/cli/cli/releases/download/v2.9.0/gh_2.9.0_linux_amd64.deb -O gh.deb
-            sudo dpkg -i gh.deb
-      - run:
-          name: Generate release
-          command: |+
-            # Get latest tag.
-            git fetch --all --tags
-            export LATEST_TAG="$(git tag | sort -V | tail -1)"
-            echo "$LATEST_TAG"
-            # Generate release from tag.
-            echo "$GITHUB_TOKEN" | gh auth login --with-token 2>/dev/null || true
-            gh release create "$LATEST_TAG" --generate-notes
-
-  publish-pypi:
-    executor: python3-10
-    resource_class: small
-    steps:
-      - checkout
-      - run:
-          name: Build package.
-          command: python setup.py sdist bdist_wheel
-      - run:
-          name: Publish package to PyPI.
-          command: |
-            pip install twine
-            twine upload dist/* -u $PYPI_USERNAME -p $API_TOKEN
+  dynamic: bjd2385/dynamic-continuation@3.7.1
+  general: premiscale/general@1.0.3
+  slack: circleci/slack@4.12.5
 
 
 workflows:
-  version: 2
-
-  gitlabci-lint:
+  password-store-operator:
     jobs:
       - dynamic/continue:
-          context: orb-publishing
-          modules: |
-            scripts
-            tests
-            src
+          context: circleci
+
+      - slack/on-hold:
+          context: slack
           filters:
             branches:
-              ignore:
-                - master
+              ignore: /.*/
+            tags:
+              only: /^v?[0-9]+\.[0-9]+\.[0-9]+$/
 
-      - generate-release:
-          name: Generate release from tag
+      - request-approval:
+          requires:
+            - slack/on-hold
+          type: approval
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^v?[0-9]+\.[0-9]+\.[0-9]+$/
+
+      - general/github-release:
+          name: Create GitHub release from tag
           context: github
+          requires:
+            - request-approval
           filters:
             branches:
               ignore: /.*/
             tags:
-              only: /^v[0-9]+\.[0-9]+\.[0-9]+$/
+              only: /^v?[0-9]+\.[0-9]+\.[0-9]+$/
 
-      - publish-pypi:
-          context: pypi
+      - general/python-release-poetry:
+          name: nexus password-store-operator upload [python]
+          context: nexus
+          repository: python
+          requires:
+            - request-approval
           filters:
             branches:
               ignore: /.*/
             tags:
-              only: /^v[0-9]+\.[0-9]+\.[0-9]+$/
+              only: /^v?[0-9]+\.[0-9]+\.[0-9]+$/
+
+      - general/python-release-poetry:
+          name: pypi password-store-operator upload [python]
+          context: pypi
+          repository: pypi
+          requires:
+            - request-approval
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^v?[0-9]+\.[0-9]+\.[0-9]+$/

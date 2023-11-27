@@ -22,7 +22,7 @@ jobs:
           name: Install development package
           command: |
             python setup.py develop
-            sudo ln -s /home/circleci/.pyenv/versions/$(python --version | awk '{ print $2 }')/bin/gitlabci-lint /usr/local/bin/gitlabci-lint
+            sudo ln -s /home/circleci/.pyenv/versions/"$(python --version | awk '{ print $2 }')"/bin/gitlabci-lint /usr/local/bin/gitlabci-lint
             gitlabci-lint --version
       - run:
           name: Run bats tests

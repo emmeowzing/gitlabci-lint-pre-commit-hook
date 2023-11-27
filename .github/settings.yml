@@ -5,7 +5,7 @@ repository:
   topics: gitlab, git, pre-commit, lint
   private: false
   has_issues: true
-  has_projects: true
+  has_projects: false
   has_wiki: false
   has_downloads: true
 
@@ -20,11 +20,11 @@ repository:
 
 # Labels: define labels for Issues and Pull Requests
 labels:
-  - name: bug
+  - name: Bug
     color: CC0000
     description: An issue with the system 🐛.
 
-  - name: feature
+  - name: Feature
     color: "#336699"
     description: New functionality.
 
@@ -32,7 +32,7 @@ labels:
     new_name: first-timers-only
 
 branches:
-  - name: master
+  - name: main
     protection:
       required_pull_request_reviews:
         required_approving_review_count: 1
