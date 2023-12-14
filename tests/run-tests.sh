@@ -25,7 +25,7 @@ generate_tests()
 #! /usr/bin/env bats
 
 @test "$f_base" {
-    poetry run gitlabci-lint -c "$f"
+    poetry run gitlabci-lint -c "$f" -p 1
 }
 EOFI
         else
@@ -34,7 +34,7 @@ EOFI
 #! /usr/bin/env bats
 
 @test "$f_base" {
-    ! poetry run gitlabci-lint -c "$f"
+    ! poetry run gitlabci-lint -c "$f" -p 1
 }
 EOFI
         fi
