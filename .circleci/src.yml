@@ -28,6 +28,7 @@ workflows:
 
       - general/python-mypy:
           name: mypy [<< matrix.executor >>]
+          configuration_file: pyproject.toml
           matrix:
             parameters:
               executor:
