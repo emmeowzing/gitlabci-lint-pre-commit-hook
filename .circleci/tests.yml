@@ -21,7 +21,7 @@ jobs:
       - run:
           name: Install development package
           command: |
-            python setup.py develop
+            poetry install
             sudo ln -s /home/circleci/.pyenv/versions/"$(python --version | awk '{ print $2 }')"/bin/gitlabci-lint /usr/local/bin/gitlabci-lint
             gitlabci-lint --version
       - run:
