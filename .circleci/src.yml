@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  general: premiscale/general@1.0.5
+  general: premiscale/general@1.0.6
 
 
 executors:
