@@ -29,7 +29,7 @@ workflows:
       - general/python-mypy:
           name: mypy [<< matrix.executor >>]
           configuration_file: pyproject.toml
-          mypy-args: |
+          mypy-args: >
             --ignore-missing-imports
           matrix:
             parameters:
