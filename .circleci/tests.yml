@@ -23,7 +23,7 @@ jobs:
           command: |
             pip install --upgrade poetry
             poetry install
-            gitlabci-lint --version
+            poetry run gitlabci-lint --version
       - run:
           name: Run bats tests
           command: |
