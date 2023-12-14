@@ -5,7 +5,7 @@ description = "Validate GitLab CI templates with a GitLab instance's API endpoin
 authors = ["Emma Doyle <emma.ann.doyle@gmail.com>"]
 license = "MIT"
 readme = "README.md"
-packages = [{include = "pre_commit_gitlabci_lint"}]
+packages = [{include = "src"}]
 
 [tool.poetry.dependencies]
 python = "^3.8"
