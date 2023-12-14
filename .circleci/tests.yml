@@ -21,9 +21,10 @@ jobs:
       - run:
           name: Install development package
           command: |
-            pip install poetry
+            pip install --upgrade poetry
             poetry install
-            sudo ln -s /home/circleci/.pyenv/versions/"$(python --version | awk '{ print $2 }')"/bin/gitlabci-lint /usr/local/bin/gitlabci-lint
+            find . -name "gitlabci-lint" -type f
+            # sudo ln -s /home/circleci/.pyenv/versions/"$(python --version | awk '{ print $2 }')"/bin/gitlabci-lint /usr/local/bin/gitlabci-lint
             gitlabci-lint --version
       - run:
           name: Run bats tests
