@@ -53,7 +53,7 @@ workflows:
           filters:
             branches:
               ignore:
-                - master
+                - main
 
       # master
 
@@ -69,4 +69,4 @@ workflows:
           filters:
             branches:
               only:
-                - master
+                - main
