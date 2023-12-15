@@ -8,9 +8,7 @@
     "install:dependencies": "./scripts/dependencies.sh",
     "install:deps": "yarn install:dependencies",
     "pylint": "./scripts/pylint.sh",
-    "develop": "./scripts/develop.sh",
     "freeze": "pip freeze | grep -v \"file:///\" | grep -v \"ssh://\" > \"$(git rev-parse --show-toplevel)\"/requirements.txt",
-    "clean": "./scripts/clean.sh",
     "test": "./scripts/tests.sh",
     "tests": "./scripts/tests.sh",
     "run:tests": "./scripts/tests.sh"

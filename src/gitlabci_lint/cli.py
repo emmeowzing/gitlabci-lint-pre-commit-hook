@@ -143,7 +143,7 @@ def config(conf: Optional[str] =None) -> dict:
     return {}
 
 
-def cli() -> None:
+def main() -> None:
     """
     Set up CLI for gitlabci-lint pre-commit hook.
     """
@@ -227,4 +227,4 @@ def cli() -> None:
 
 
 if __name__ == '__main__':
-    cli()
+    main()
