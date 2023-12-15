@@ -90,7 +90,7 @@ gitlab-ci-lint:
     YQ_VERSION: 4.40.5
   before_script:
     - set -eo pipefail
-    - apt update && apt install -y python3-pip
+    - sudo apt update && sudo apt install -y python3-pip
     - pip install -q --disable-pip-version-check --no-python-version-warning pre-commit-gitlabci-lint=="$GITLAB_CI_LINT_VERSION"
     - |
       wget https://github.com/mikefarah/yq/releases/download/v${YQ_VERSION}/yq_linux_amd64 -O yq
@@ -101,7 +101,10 @@ gitlab-ci-lint:
 
       for template in "${_TEMPLATES[@]}"; do
           printf "INFO: Considering \"%s\"\\n" "$template"
+
+          # Count the number of jobs present in a GitLab CI template. Job templates aren't counted as jobs.
           _JOB_COUNT="$(yq '... comments="" | to_entries | filter(.key != "include" and .key != "default" and .key != "stages" and .key != "variables" and .key != "workflow" and (.key != ".*") and .key != "cache") | from_entries | length' "$template")"
+
           if [ "$_JOB_COUNT" -ne "0" ]; then
               printf "INFO: Linting \"%s\"\\n" "$template"
               gitlabci-lint -p "$CI_PROJECT_ID" -b https://"$CI_SERVER_HOST" -c "$template"
@@ -112,5 +115,5 @@ gitlab-ci-lint:
   tags:
     - small
   rules:
-    - $CI_MERGE_REQUEST_TARGET_BRANCH_NAME =~ /^(develop|main)$/ && $SCHEDULE_JOB == null
+    - $CI_MERGE_REQUEST_TARGET_BRANCH_NAME =~ /^(develop|main)$/
 ```
