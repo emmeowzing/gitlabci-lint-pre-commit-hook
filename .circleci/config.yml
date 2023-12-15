@@ -45,9 +45,21 @@ workflows:
               only: /^v?[0-9]+\.[0-9]+\.[0-9]+$/
 
       - general/python-release-poetry:
-          name: nexus gitlabci-lint upload [python]
+          name: gitlabci-lint upload [python]
           context: nexus
           repository: python
+          requires:
+            - request-approval
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^v?[0-9]+\.[0-9]+\.[0-9]+$/
+
+      - general/python-release-poetry:
+          name: pypi gitlabci-lint upload [pypi]
+          context: pypi
+          repository: pypi
           requires:
             - request-approval
           filters:

@@ -42,7 +42,7 @@ workflows:
       # develop
 
       - general/python-release-poetry:
-          name: twine upload [python-pypi]
+          name: twine upload [python-develop]
           context: nexus
           repository: python-develop
           version: 0.0.<< pipeline.number >>
@@ -58,7 +58,7 @@ workflows:
       # master
 
       - general/python-release-poetry:
-          name: twine upload [python-pypi]
+          name: twine upload [python-master]
           context: pypi
           repository: python-master
           version: 0.0.<< pipeline.number >>
