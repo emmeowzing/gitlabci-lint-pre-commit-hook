@@ -30,7 +30,7 @@ workflows:
           name: mypy [<< matrix.executor >>]
           configuration_file: pyproject.toml
           mypy-args: >-
-            --ignore-missing-imports
+            --ignore-missing-imports --install-types --non-interactive
           matrix:
             parameters:
               executor:
