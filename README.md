@@ -4,11 +4,11 @@ This is a [pre-commit](https://pre-commit.com/) hook that uses GitLab's `/api/v4
 
 ```text
 $ gitlabci-lint --help
-usage: gitlabci-lint [-h] [-c CONFIGS] [-C GITLABCI_LINT_CONFIG] [-b [BASE_URL]] [--version] [-q]
+usage: gitlabci-lint [-h] [-c CONFIGS] [-C GITLABCI_LINT_CONFIG] [-b [BASE_URL]] [-p PROJECT_ID] [--version] [-q]
 
 Validate your GitLab CI with GitLab's API endpoint.
 
-options:
+optional arguments:
   -h, --help            show this help message and exit
   -c CONFIGS, --configs CONFIGS
                         CI Config files to check. (default: .gitlab-ci.yml)
@@ -28,13 +28,7 @@ options:
 pip install pre-commit-gitlabci-lint
 ```
 
-### Specific versions
-
-```shell
-pip install pre-commit-gitlabci-lint==<desired-version>
-```
-
-## Usage
+## Use
 
 ### Setup
 
@@ -43,7 +37,30 @@ pip install pre-commit-gitlabci-lint==<desired-version>
 3. Add the projectId for your gitlab project as a command line argument, or set it in the config file.
 4. Ensure the virtualenv Python version is 3.8 or later.
 
-### Example
+### Configuration
+
+A configuration file is not required for use. However, if you'd rather specify settings in a file that is checked into your project's VCS, you may create a config file located at `/root/of/repo/.gitlabci-lint.toml`, or `$HOME/.config/.gitlabci-lint/config.toml`, such as the following.
+
+```toml
+[gitlabci-lint]
+quiet = false
+base-url = "https://gitlab.com"
+project-id = "12345678"
+configs = [ ".gitlab-ci.yml" ]
+token = "$GITLAB_TOKEN"
+```
+
+## Examples
+
+### Example: Shell
+
+```console
+$ export GITLAB_TOKEN="$(pass show gitlab-api-key)"
+$ gitlabci-lint -p <project_id>
+Config file at '.gitlab-ci.yml' is valid.
+```
+
+### Example: pre-commit
 
 An example `.pre-commit-config.yaml`:
 
@@ -57,15 +74,36 @@ repos:
       # args: [-b, 'https://custom.gitlab.host.com', '-p', '12345678']
 ```
 
-### Use configuration files
+### Example: GitLab CI
 
-A configuration file is not required for use. However, if you'd rather specify settings in a file that is checked into your project's VCS, you may create a config file located at `/root/of/repo/.gitlabci-lint.toml`, or `$HOME/.config/.gitlabci-lint/config.toml`, such as the following.
+Here is an example Gitlab CI job that lints all GitLab CI files in a project on merge requests with naming conventions matching the regex `.*.gitlab-ci.yml`.
 
-```toml
-[gitlabci-lint]
-quiet = false
-base-url = "https://gitlab.com"
-project-id = "12345678"
-configs = [ ".gitlab-ci.yml" ]
-token = "$GITLAB_TOKEN"
+```yaml
+gitlab-ci-lint:
+  stage: test
+  image: ${GKUBE_SERVICE}
+  variables:
+    GITLAB_CI_LINT_VERSION: <version>
+  before_script:
+    - set -eo pipefail
+    - apt update && apt install -y python3-pip
+    - pip install -q --disable-pip-version-check --no-python-version-warning pre-commit-gitlabci-lint=="$GITLAB_CI_LINT_VERSION"
+  script:
+    - |+
+      mapfile -t _TEMPLATES < <(find . -type f -regex ".*.gitlab-ci.yml")
+
+      for template in "${_TEMPLATES[@]}"; do
+          printf "INFO: Considering \"%s\"\\n" "$template"
+          _JOB_COUNT="$(yq '... comments="" | to_entries | filter(.key != "include" and .key != "default" and .key != "stages" and .key != "variables" and .key != "workflow" and (.key != ".*") and .key != "cache") | from_entries | length' "$template")"
+          if [ "$_JOB_COUNT" -ne "0" ]; then
+              printf "INFO: Linting \"%s\"\\n" "$template"
+              gitlabci-lint -p "$CI_PROJECT_ID" -b https://"$CI_SERVER_HOST" -c "$template"
+          else
+              printf "INFO: Skipping \"%s\": no defined jobs.\\n" "$template"
+          fi
+      done
+  tags:
+    - small
+  rules:
+    - $CI_MERGE_REQUEST_TARGET_BRANCH_NAME =~ $KEYWORD_BRANCHES && $SCHEDULE_JOB == null
 ```
