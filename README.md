@@ -109,5 +109,5 @@ gitlab-ci-lint:
   tags:
     - small
   rules:
-    - $CI_MERGE_REQUEST_TARGET_BRANCH_NAME =~ /^(develop|master)$/ && $SCHEDULE_JOB == null
+    - $CI_MERGE_REQUEST_TARGET_BRANCH_NAME =~ /^(develop|main)$/ && $SCHEDULE_JOB == null
 ```
