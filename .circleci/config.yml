@@ -40,6 +40,7 @@ workflows:
             - orb-publishing
           requires:
             - request-approval
+          github-organization: $CIRCLE_PROJECT_USERNAME
           filters:
             branches:
               ignore: /.*/
