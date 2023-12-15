@@ -52,7 +52,7 @@ token = "$GITLAB_TOKEN"
 
 ## Examples
 
-### Example: Shell
+### Shell
 
 ```console
 $ export GITLAB_TOKEN="$(pass show gitlab-api-key)"
@@ -60,7 +60,7 @@ $ gitlabci-lint -p <project_id>
 Config file at '.gitlab-ci.yml' is valid.
 ```
 
-### Example: pre-commit
+### pre-commit
 
 An example `.pre-commit-config.yaml`:
 
@@ -74,7 +74,7 @@ repos:
       # args: [-b, 'https://custom.gitlab.host.com', '-p', '12345678']
 ```
 
-### Example: GitLab CI
+### GitLab CI
 
 Here is an example Gitlab CI job that lints all GitLab CI files in a project on merge requests with naming conventions matching the regex `.*.gitlab-ci.yml`.
 
