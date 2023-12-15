@@ -81,13 +81,17 @@ Here is an example Gitlab CI job that lints all GitLab CI files in a project on 
 ```yaml
 gitlab-ci-lint:
   stage: test
-  image: ${GKUBE_SERVICE}
+  image: cimg/base:2023.12
   variables:
     GITLAB_CI_LINT_VERSION: <version>
+    YQ_VERSION: 4.40.5
   before_script:
     - set -eo pipefail
     - apt update && apt install -y python3-pip
     - pip install -q --disable-pip-version-check --no-python-version-warning pre-commit-gitlabci-lint=="$GITLAB_CI_LINT_VERSION"
+    - |
+      wget https://github.com/mikefarah/yq/releases/download/v${YQ_VERSION}/yq_linux_amd64 -O yq
+      sudo install yq /usr/local/bin/yq
   script:
     - |+
       mapfile -t _TEMPLATES < <(find . -type f -regex ".*.gitlab-ci.yml")
