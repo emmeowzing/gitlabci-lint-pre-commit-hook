@@ -35,7 +35,9 @@ workflows:
 
       - general/github-release:
           name: Create GitHub release from tag
-          context: github
+          context:
+            - github
+            - orb-publishing
           requires:
             - request-approval
           filters:
@@ -60,6 +62,8 @@ workflows:
           name: pypi gitlabci-lint upload [pypi]
           context: pypi
           repository: pypi
+          username: $PYPI_USERNAME
+          password: $API_TOKEN
           requires:
             - request-approval
           filters:
