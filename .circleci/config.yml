@@ -45,21 +45,9 @@ workflows:
               only: /^v?[0-9]+\.[0-9]+\.[0-9]+$/
 
       - general/python-release-poetry:
-          name: nexus password-store-operator upload [python]
+          name: nexus gitlabci-lint upload [python]
           context: nexus
           repository: python
-          requires:
-            - request-approval
-          filters:
-            branches:
-              ignore: /.*/
-            tags:
-              only: /^v?[0-9]+\.[0-9]+\.[0-9]+$/
-
-      - general/python-release-poetry:
-          name: pypi password-store-operator upload [python]
-          context: pypi
-          repository: pypi
           requires:
             - request-approval
           filters:
