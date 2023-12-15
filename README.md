@@ -2,6 +2,7 @@
 
 [![PyPI version](https://img.shields.io/pypi/v/pre-commit-gitlabci-lint.svg?logo=pypi&style=flat-square)](https://pypi.org/project/pre-commit-gitlabci-lint/)
 [![PyPI downloads](https://img.shields.io/pypi/dm/pre-commit-gitlabci-lint?style=flat-square)](https://pypistats.org/packages/pre-commit-gitlabci-lint)
+[![CircleCI](https://dl.circleci.com/status-badge/img/gh/emmeowzing/gitlabci-lint-pre-commit-hook/tree/main.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/gh/emmeowzing/gitlabci-lint-pre-commit-hook/tree/main)
 
 This is a [pre-commit](https://pre-commit.com/) hook that uses GitLab's `/api/v4/ci/lint` linting endpoint to validate the contents of `.gitlab-ci.yml` files. This is similar to CircleCI pre-commit hooks that validate that product's configuration files.
 
