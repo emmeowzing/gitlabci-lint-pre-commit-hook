@@ -1,5 +1,5 @@
 """
-Validate your GitLab CI with GitLab's API endpoint.
+Validate your GitLab CI with a GitLab intance's API endpoint.
 """
 
 

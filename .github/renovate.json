@@ -1,0 +1,13 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:recommended"
+  ],
+  "packageRules": [
+    {
+      "matchCategories": ["python"],
+      "matchUpdateTypes": ["patch", "minor"],
+      "groupName": "python (non-major)"
+    }
+  ]
+}
