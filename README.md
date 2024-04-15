@@ -26,13 +26,13 @@ optional arguments:
   -q, -Q, --quiet       Silently fail and pass, without output, unless improperly configured. (default: False)
 ```
 
-## Install
+## Use
+
+### Install
 
 ```shell
 pip install pre-commit-gitlabci-lint
 ```
-
-## Use
 
 ### Setup
 
