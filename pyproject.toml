@@ -42,5 +42,5 @@ testpaths = [
 disable = "invalid-name,wrong-import-order,superfluous-parens,line-too-long,missing-final-newline,logging-fstring-interpolation,too-many-instance-attributes,unused-argument,unused-import"
 fail-under = 9
 
-[tool.pylint.MASTER]
+[tool.pylint.MAIN]
 init-hook = "import sys; sys.path.append('.')"
