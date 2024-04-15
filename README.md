@@ -58,13 +58,21 @@ token = "$GITLAB_TOKEN"
 
 ### Shell
 
+<details>
+  <summary><b>Expand</b></summary>
+
 ```console
 $ export GITLAB_TOKEN="$(pass show gitlab-api-key)"
 $ gitlabci-lint -p <project_id>
 Config file at '.gitlab-ci.yml' is valid.
 ```
 
-### pre-commit
+</details>
+
+### Pre-commit
+
+<details>
+  <summary><b>Expand</b></summary>
 
 An example `.pre-commit-config.yaml`:
 
@@ -77,8 +85,12 @@ repos:
       - id: gitlabci-lint
       # args: [-b, 'https://custom.gitlab.host.com', '-p', '12345678']
 ```
+</details>
 
 ### GitLab CI
+
+<details>
+  <summary><b>Expand</b></summary>
 
 Here is an example Gitlab CI job that lints all GitLab CI files in a project on merge requests with naming conventions matching the regex `.*.gitlab-ci.yml`.
 
@@ -118,3 +130,4 @@ gitlab-ci-lint:
   rules:
     - $CI_MERGE_REQUEST_TARGET_BRANCH_NAME =~ /^(develop|main)$/
 ```
+</details>
