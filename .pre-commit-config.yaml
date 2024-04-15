@@ -45,7 +45,7 @@ repos:
       - id: pylint
         args:
           - --rcfile=.pylintrc
-          - premiscale/
+          - src/
 
   - repo: https://github.com/abravalheri/validate-pyproject
     rev: v0.15
