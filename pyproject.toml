@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "pre-commit-gitlabci-lint"
-version = "1.3.0"
+version = "1.4.0"
 description = "Validate GitLab CI templates with a GitLab instance's API endpoint"
 authors = ["Emma Doyle <emma.ann.doyle@gmail.com>"]
 license = "MIT"
@@ -15,6 +15,7 @@ toml = "^0.10.2"
 pylint = "^3.0.2"
 mypy = "^1.7.1"
 pre-commit = "^3.5.0"
+pytest = "^8.1.1"
 
 [tool.poetry.scripts]
 gitlabci-lint = "src.gitlabci_lint.cli:main"
@@ -27,3 +28,19 @@ build-backend = "poetry.core.masonry.api"
 python_version = "3.8"
 strict_optional = true
 ignore_missing_imports = true
+
+[tool.coverage.report]
+fail_under = 60
+
+[tool.pytest.ini_options]
+addopts = "--junitxml=./junit_test_results.xml"
+testpaths = [
+  "tests"
+]
+
+[tool.pylint."MESSAGES CONTROL"]
+disable = "invalid-name,wrong-import-order,superfluous-parens,line-too-long,missing-final-newline,logging-fstring-interpolation,too-many-instance-attributes,unused-argument,unused-import"
+fail-under = 9
+
+[tool.pylint.MAIN]
+init-hook = "import sys; sys.path.append('.')"

@@ -2,7 +2,7 @@
   "name": "pre-commit-gitlabci-lint",
   "description": "pre-commit hook for GitLab CI validation",
   "repository": "git@github.com:bjd2385/pre-commit-gitlabci-lint.git",
-  "author": "Emma Doyle <emma@sbevision.com>",
+  "author": "Emma Doyle <emma@premiscale.com>",
   "license": "MIT",
   "scripts": {
     "install:dependencies": "./scripts/dependencies.sh",

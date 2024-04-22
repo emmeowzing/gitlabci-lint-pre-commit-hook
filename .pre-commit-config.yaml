@@ -44,8 +44,8 @@ repos:
     hooks:
       - id: pylint
         args:
-          - --rcfile=.pylintrc
-          - premiscale/
+          - --rcfile=pyproject.toml
+          - src/
 
   - repo: https://github.com/abravalheri/validate-pyproject
     rev: v0.15

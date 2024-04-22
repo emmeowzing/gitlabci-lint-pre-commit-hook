@@ -9,7 +9,7 @@ repository:
   has_wiki: false
   has_downloads: true
 
-  default_branch: master
+  default_branch: main
 
   allow_squash_merge: true
   allow_merge_commit: true
